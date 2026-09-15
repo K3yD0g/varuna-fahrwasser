@@ -1,0 +1,41 @@
+name: Pegel und Regen aktualisieren
+
+on:
+  schedule:
+    # Zeiten in UTC. 03:40 trifft die Sommerzeit (05:40 Ortszeit),
+    # 04:40 die Winterzeit (05:40 Ortszeit). Der jeweils andere Lauf
+    # findet den 5-Uhr-Wert einfach schon vor und schreibt ihn erneut.
+    - cron: "40 3,4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daten-update
+  cancel-in-progress: false
+
+jobs:
+  aktualisieren:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Daten holen
+        run: python update.py
+
+      - name: Änderung veröffentlichen
+        run: |
+          git config user.name "Varuna Bot"
+          git config user.email "actions@github.com"
+          git add daten.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderung."
+          else
+            git commit -m "Pegel und Regen: Stand $(date -u +%Y-%m-%d)"
+            git push
+          fi

@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Varuna Fahrwasser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Sans+3:wght@400;600&family=Zilla+Slab:wght@600;700&display=swap">
+
+<style>
+:root {
+  --bg: #E6ECEF;
+  --panel: #FBFCFD;
+  --panel-2: #F1F5F7;
+  --ink: #12222E;
+  --ink-2: #4B606F;
+  --ink-3: #7D909C;
+  --line: #CDD8DF;
+  --line-soft: #DFE7EC;
+  --accent: #1C6B74;
+  --signal: #B4641F;
+  --signal-soft: #F3E2D2;
+  --calm: #2F6E93;
+  --calm-soft: #DCE7EF;
+  --bar: #4E87A8;
+  --bar-top: #2B5A78;
+  --shadow: 0 1px 2px rgba(18,34,46,.06), 0 8px 24px -18px rgba(18,34,46,.5);
+
+  --f-display: "Zilla Slab", Georgia, "Times New Roman", serif;
+  --f-body: "Source Sans 3", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #08141B;
+    --panel: #0F212B;
+    --panel-2: #142A36;
+    --ink: #DCE8EE;
+    --ink-2: #9BB0BC;
+    --ink-3: #6B8190;
+    --line: #213A48;
+    --line-soft: #1A2F3B;
+    --accent: #4FA6A8;
+    --signal: #DE9354;
+    --signal-soft: #33241A;
+    --calm: #7BAACB;
+    --calm-soft: #172B37;
+    --bar: #4E87A8;
+    --bar-top: #7FB4D2;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px -20px rgba(0,0,0,.9);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #08141B;
+  --panel: #0F212B;
+  --panel-2: #142A36;
+  --ink: #DCE8EE;
+  --ink-2: #9BB0BC;
+  --ink-3: #6B8190;
+  --line: #213A48;
+  --line-soft: #1A2F3B;
+  --accent: #4FA6A8;
+  --signal: #DE9354;
+  --signal-soft: #33241A;
+  --calm: #7BAACB;
+  --calm-soft: #172B37;
+  --bar: #4E87A8;
+  --bar-top: #7FB4D2;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px -20px rgba(0,0,0,.9);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding-inline: 20px;
+  padding-block: 40px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ---- header ---- */
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 10px;
+}
+h1 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(30px, 6vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+.standfirst {
+  margin: 10px 0 0;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+/* ---- verdict ---- */
+.verdict {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px 22px;
+  border-radius: 3px;
+  background: var(--calm-soft);
+  border-left: 4px solid var(--calm);
+}
+.verdict.rise {
+  background: var(--signal-soft);
+  border-left-color: var(--signal);
+}
+.verdict-mark {
+  font-family: var(--f-mono);
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--calm);
+  flex: none;
+}
+.verdict.rise .verdict-mark { color: var(--signal); }
+.verdict h2 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 21px;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+.verdict p { margin: 0; color: var(--ink-2); font-size: 15px; }
+
+/* ---- panels ---- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.panel-head h3 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 19px;
+  margin: 0;
+  letter-spacing: .005em;
+}
+.panel-head .note {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: 0;
+  flex-basis: 100%;
+  padding-top: 2px;
+}
+
+.badge {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+  flex: none;
+}
+.badge.live { color: var(--accent); }
+.badge.sample { color: var(--signal); background: var(--signal-soft); border-color: transparent; }
+
+/* ---- gauge rows ---- */
+.gauge {
+  display: grid;
+  grid-template-columns: 1fr 104px 112px;
+  gap: 4px 20px;
+  align-items: center;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.gauge:last-child { border-bottom: 0; }
+.gauge-name {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 18px;
+}
+.gauge-name span {
+  font-family: var(--f-body);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-left: 8px;
+}
+.gauge-meta {
+  grid-column: 1;
+  font-size: 13px;
+  color: var(--ink-2);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.gauge-val {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  text-align: right;
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.gauge-val small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-left: 3px;
+}
+
+/* ---- Spaltenköpfe über den Pegelzeilen ---- */
+.gauge-head {
+  display: grid;
+  grid-template-columns: 1fr 104px 112px;
+  gap: 20px;
+  padding: 10px 22px 8px;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--panel-2);
+}
+.gauge-head span {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: right;
+}
+.gauge-head span:first-child { text-align: left; }
+.gauge-ab {
+  grid-row: 1 / span 2;
+  grid-column: 3;
+  text-align: right;
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  color: var(--accent);
+}
+.gauge-ab small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-left: 3px;
+}
+.verdict-ab {
+  margin: 8px 0 0;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.chip {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  background: var(--panel-2);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.chip.falling { background: var(--calm-soft); color: var(--calm); }
+.chip.rising  { background: var(--signal-soft); color: var(--signal); }
+.ts { font-family: var(--f-mono); font-size: 12px; color: var(--ink-3); }
+.stale { color: var(--signal); }
+
+/* ---- rain ---- */
+.area {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.area:last-of-type { border-bottom: 0; }
+.area-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.area-name { font-weight: 600; font-size: 15px; }
+.area-sum {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.bars {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  align-items: end;
+  height: 72px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0;
+}
+.bar-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  height: 100%;
+  position: relative;
+  cursor: default;
+}
+.bar {
+  background: var(--bar);
+  border-radius: 4px 4px 0 0;
+  min-height: 2px;
+  transition: background .12s ease;
+}
+.bar-cell:hover .bar, .bar-cell:focus-visible .bar { background: var(--bar-top); }
+.bar-cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.bar-peak {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.days {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  margin-top: 6px;
+}
+.day {
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  letter-spacing: .02em;
+}
+.day.today { color: var(--accent); font-weight: 600; }
+
+#tip {
+  position: fixed;
+  z-index: 40;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--panel);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  padding: 5px 9px;
+  border-radius: 3px;
+  transform: translate(-50%, -140%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .1s ease;
+}
+#tip.on { opacity: 1; }
+
+/* ---- footer ---- */
+footer {
+  font-size: 13px;
+  color: var(--ink-3);
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+footer a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+footer strong { color: var(--ink-2); font-weight: 600; }
+.sample-key {
+  display: inline-block;
+  width: 9px; height: 9px;
+  background: var(--signal);
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: baseline;
+}
+
+@media (max-width: 560px) {
+  .gauge, .gauge-head { grid-template-columns: 1fr 74px 82px; gap: 4px 10px; }
+  .gauge-val, .gauge-ab { font-size: 22px; }
+  .gauge-name { font-size: 16px; }
+  .gauge-name span { display: block; margin-left: 0; }
+  .area, .panel-head, .gauge, .gauge-head { padding-inline: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">GMS Varuna · BSR 26031 · RenShip GmbH</p>
+    <h1>Fahrwasser &amp; Einzugsgebiet</h1>
+    <p class="standfirst">Zwei Dinge, die die Abladung bestimmen: was die Pegel auf der Strecke Liedolsheim&ndash;Frankfurt jetzt zeigen, und wie viel Regen im Einzugsgebiet unterwegs ist.</p>
+  </header>
+
+  <section class="verdict" id="verdict" aria-live="polite">
+    <div class="verdict-mark" id="verdict-mark">&#8595;</div>
+    <div>
+      <h2 id="verdict-title">Lade&hellip;</h2>
+      <p id="verdict-body"></p>
+      <p class="verdict-ab" id="verdict-ab"></p>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-pegel">
+    <div class="panel-head">
+      <h3 id="h-pegel">Pegel</h3>
+      <span class="badge live" id="pegel-badge">Live</span>
+      <p class="note" id="pegel-note"></p>
+    </div>
+    <div class="gauge-head" aria-hidden="true">
+      <span>Pegelstelle</span><span>Pegel</span><span>Abladetiefe</span>
+    </div>
+    <div id="gauges"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-regen">
+    <div class="panel-head">
+      <h3 id="h-regen">Regen im Einzugsgebiet</h3>
+      <span class="badge sample" id="regen-badge">Beispieldaten</span>
+      <p class="note">Niederschlag der n&auml;chsten sieben Tage in mm. Was in den Bergen f&auml;llt, steht zwei bis vier Tage sp&auml;ter am Pegel &ndash; lokaler Regen in Siebeldingen sagt wenig.</p>
+    </div>
+    <div id="rain"></div>
+  </section>
+
+  <footer>
+    <div id="foot-updated"></div>
+    <div><strong>Quellen:</strong> Pegelst&auml;nde von PEGELONLINE (Wasserstra&szlig;en- und Schifffahrtsverwaltung des Bundes), jeweils der 5-Uhr-Wert, ungepr&uuml;fte Rohdaten. Niederschlagsprognose vom Meteorologischen Institut Norwegen (MET Norway).</div>
+    <div><span class="sample-key" aria-hidden="true"></span><strong>Beispieldaten</strong> sind orange gekennzeichnet und stammen nicht aus einer Messung.</div>
+  </footer>
+
+</div>
+
+<div id="tip" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SNAPSHOT = {
+    gauges: {
+      updatedAt: "2026-09-15T06:30:00+02:00",
+      placeholder: false,
+      items: [
+        { id: "MAXAU", name: "Maxau", river: "Rhein", value: 318, ts: "2026-09-15T05:00:00+02:00",
+          state: "low", trend: "rising", trendNote: "5-Uhr-Werte: 317 → 318 cm seit gestern", placeholder: false },
+        { id: "MANNHEIM", name: "Mannheim", river: "Rhein", value: 86, ts: "2026-09-15T05:00:00+02:00",
+          state: "low", trend: "falling", trendNote: "5-Uhr-Werte: 88 → 86 cm seit gestern", placeholder: false },
+        { id: "MAINZ", name: "Mainz", river: "Rhein", value: 133, ts: "2026-09-15T05:00:00+02:00",
+          state: "low", trend: "rising", trendNote: "5-Uhr-Werte: 131 → 133 cm seit gestern", placeholder: false }
+      ]
+    },
+    rain: {
+      placeholder: false,
+      updatedAt: "2026-09-15T06:30:00+02:00",
+      areas: [
+        { name: "Alpenrheintal / Vorarlberg", mm: [0, 41, 2, 0, 0, 0, 5] },
+        { name: "Schwarzwald, Hochlagen", mm: [0, 7, 0, 0, 0, 0, 2] },
+        { name: "Oberrhein / Pfalz", mm: [0, 0, 0, 0, 0, 1, 0] }
+      ]
+    }
+  };
+
+  /* Abladetiefe = Pegelstand plus fester Zuschlag je Pegel, in cm.
+     Maxau minus 160, Mannheim plus 70, Mainz plus 30. */
+  var OFFSET_CM = { MAXAU: -160, MANNHEIM: 70, MAINZ: 30 };
+
+  function abladungCm(g) {
+    if (g == null || g.value == null) return null;
+    var off = (typeof g.offsetCm === "number") ? g.offsetCm : OFFSET_CM[g.id];
+    if (typeof off !== "number") return null;
+    return g.value + off;
+  }
+
+  function fmtM(cm) {
+    return (cm / 100).toFixed(2).replace(".", ",");
+  }
+
+  function offsetLabel(g) {
+    var off = (typeof g.offsetCm === "number") ? g.offsetCm : OFFSET_CM[g.id];
+    if (typeof off !== "number") return "";
+    return (off < 0 ? "− " : "+ ") + Math.abs(off) + " cm";
+  }
+
+  var STATE_LABEL = { low: "niedrig", normal: "mittel", high: "hoch" };
+  var TREND_LABEL = { falling: "fallend", rising: "steigend", steady: "gleichbleibend", unknown: "Trend offen" };
+
+  var DAYS = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+
+  function fmtDateTime(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return "—";
+    return DAYS[d.getDay()] + " " + String(d.getDate()).padStart(2, "0") + "." +
+      String(d.getMonth() + 1).padStart(2, "0") + ". " +
+      String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + " Uhr";
+  }
+
+  function hoursSince(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return null;
+    return (Date.now() - d.getTime()) / 3600000;
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  /* ---------- gauges ---------- */
+
+  function renderGauges(data) {
+    var host = document.getElementById("gauges");
+    host.textContent = "";
+    var items = (data && data.items) || [];
+    var anySample = false;
+
+    items.forEach(function (g) {
+      if (g.placeholder) anySample = true;
+      var row = el("div", "gauge");
+
+      var name = el("div", "gauge-name", g.name);
+      var riv = el("span", null, g.river);
+      name.appendChild(riv);
+      row.appendChild(name);
+
+      var val = el("div", "gauge-val");
+      val.appendChild(document.createTextNode(g.value == null ? "—" : String(g.value)));
+      val.appendChild(el("small", null, "cm"));
+      row.appendChild(val);
+
+      var abCell = el("div", "gauge-ab");
+      var abCm = abladungCm(g);
+      if (abCm == null) {
+        abCell.textContent = "—";
+      } else {
+        abCell.appendChild(document.createTextNode(fmtM(abCm)));
+        abCell.appendChild(el("small", null, "m"));
+      }
+      abCell.title = "Pegel " + g.value + " cm " + offsetLabel(g);
+      row.appendChild(abCell);
+
+      var meta = el("div", "gauge-meta");
+
+      var stateChip = el("span", "chip", STATE_LABEL[g.state] || "Zustand offen");
+      meta.appendChild(stateChip);
+
+      var trendChip = el("span", "chip " + (g.trend === "falling" ? "falling" : g.trend === "rising" ? "rising" : ""),
+        TREND_LABEL[g.trend] || TREND_LABEL.unknown);
+      meta.appendChild(trendChip);
+
+      var h = hoursSince(g.ts);
+      var ts = el("span", "ts" + (h != null && h > 27 ? " stale" : ""), "Stand " + fmtDateTime(g.ts));
+      meta.appendChild(ts);
+
+      if (g.placeholder) meta.appendChild(el("span", "badge sample", "Beispiel"));
+      if (g.trendNote) {
+        var note = el("span", "ts", "· " + g.trendNote);
+        meta.appendChild(note);
+      }
+
+      row.appendChild(meta);
+      host.appendChild(row);
+    });
+
+    var badge = document.getElementById("pegel-badge");
+    if (anySample) { badge.className = "badge sample"; badge.textContent = "Teils Beispieldaten"; }
+    else { badge.className = "badge live"; badge.textContent = "Gemessen"; }
+
+    var oldest = items.reduce(function (m, g) {
+      var h = hoursSince(g.ts);
+      return h != null && h > m ? h : m;
+    }, 0);
+    document.getElementById("pegel-note").textContent =
+      "5-Uhr-Werte aus der Messreihe von PEGELONLINE. Abladetiefe = Pegel " +
+      items.map(function (g) { return g.name + " " + offsetLabel(g); }).join(", ") + ". " +
+      (oldest > 27 ? "Ein Pegel hat den 5-Uhr-Wert von heute nicht geliefert – am Zeitstempel markiert." : "");
+
+    renderVerdict(items);
+  }
+
+  function renderVerdict(items) {
+    var rising = items.filter(function (g) { return g.trend === "rising"; });
+    var box = document.getElementById("verdict");
+    var mark = document.getElementById("verdict-mark");
+    var title = document.getElementById("verdict-title");
+    var body = document.getElementById("verdict-body");
+
+    if (rising.length) {
+      box.classList.add("rise");
+      mark.textContent = "↑";
+      title.textContent = "Anstieg gemeldet";
+      body.textContent = rising.map(function (g) {
+        return g.name + ": " + g.value + " cm, " + (g.trendNote || "steigend");
+      }).join(" · ");
+    } else {
+      box.classList.remove("rise");
+      mark.textContent = "↓";
+      title.textContent = "Kein Anstieg in Sicht";
+      var names = items.map(function (g) { return g.name; }).join(", ");
+      body.textContent = names
+        ? names + " liegen im niedrigen Bereich, kein steigender Trend gegenüber gestern."
+        : "Keine Pegeldaten geladen.";
+    }
+
+    var abs = items.map(function (g) { return { name: g.name, cm: abladungCm(g) }; })
+                   .filter(function (a) { return a.cm != null; });
+    var abEl = document.getElementById("verdict-ab");
+    if (!abs.length) { abEl.textContent = ""; return; }
+    var min = abs.reduce(function (m, a) { return a.cm < m.cm ? a : m; });
+    abEl.textContent = "Engster Wert: " + fmtM(min.cm) + " m bei " + min.name;
+  }
+
+  /* ---------- rain ---------- */
+
+  function renderRain(data) {
+    var host = document.getElementById("rain");
+    host.textContent = "";
+    var areas = (data && data.areas) || [];
+
+    var max = 1;
+    areas.forEach(function (a) {
+      (a.mm || []).forEach(function (v) { if (v > max) max = v; });
+    });
+
+    var today = new Date();
+    var labels = [];
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+      labels.push({
+        short: DAYS[d.getDay()],
+        full: DAYS[d.getDay()] + " " + String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0") + ".",
+        today: i === 0
+      });
+    }
+
+    areas.forEach(function (a) {
+      var wrapEl = el("div", "area");
+
+      var head = el("div", "area-head");
+      head.appendChild(el("div", "area-name", a.name));
+      var sum = (a.mm || []).reduce(function (s, v) { return s + v; }, 0);
+      head.appendChild(el("div", "area-sum", "7 Tage: " + Math.round(sum) + " mm"));
+      wrapEl.appendChild(head);
+
+      var peakIdx = 0;
+      (a.mm || []).forEach(function (v, i) { if (v > (a.mm[peakIdx] || 0)) peakIdx = i; });
+
+      var bars = el("div", "bars");
+      bars.setAttribute("role", "img");
+      bars.setAttribute("aria-label", a.name + ": Niederschlag " + (a.mm || []).map(function (v, i) {
+        return labels[i].full + " " + v + " mm";
+      }).join(", "));
+
+      (a.mm || []).forEach(function (v, i) {
+        var cell = el("div", "bar-cell");
+        cell.tabIndex = 0;
+        var bar = el("div", "bar");
+        bar.style.height = Math.max(2, Math.round((v / max) * 56)) + "px";
+        if (i === peakIdx && v > 0) {
+          var lab = el("div", "bar-peak", v + " mm");
+          cell.appendChild(lab);
+        }
+        cell.appendChild(bar);
+        cell._tip = labels[i].full + "  " + v + " mm";
+        bars.appendChild(cell);
+      });
+      wrapEl.appendChild(bars);
+
+      var days = el("div", "days");
+      labels.forEach(function (l) {
+        days.appendChild(el("div", "day" + (l.today ? " today" : ""), l.short));
+      });
+      wrapEl.appendChild(days);
+
+      host.appendChild(wrapEl);
+    });
+
+    var badge = document.getElementById("regen-badge");
+    if (data && data.placeholder === false) {
+      badge.className = "badge live";
+      badge.textContent = "Prognose";
+    } else {
+      badge.className = "badge sample";
+      badge.textContent = "Beispieldaten";
+    }
+  }
+
+  /* ---------- tooltip ---------- */
+
+  var tip = document.getElementById("tip");
+  function showTip(e) {
+    var cell = e.target.closest ? e.target.closest(".bar-cell") : null;
+    if (!cell || !cell._tip) return;
+    tip.textContent = cell._tip;
+    var r = cell.getBoundingClientRect();
+    tip.style.left = (r.left + r.width / 2) + "px";
+    tip.style.top = r.top + "px";
+    tip.classList.add("on");
+  }
+  function hideTip() { tip.classList.remove("on"); }
+  document.addEventListener("mouseover", showTip);
+  document.addEventListener("mouseout", hideTip);
+  document.addEventListener("focusin", showTip);
+  document.addEventListener("focusout", hideTip);
+
+  /* ---------- footer ---------- */
+
+  function renderFooter(gaugesUpdated, live) {
+    var f = document.getElementById("foot-updated");
+    f.textContent = (live ? "Zuletzt aktualisiert " : "Eingebauter Stand: ") +
+      fmtDateTime(gaugesUpdated) + ". Die Daten werden jeden Morgen automatisch erneuert.";
+  }
+
+  /* ---------- boot ---------- */
+
+  renderGauges(SNAPSHOT.gauges);
+  renderRain(SNAPSHOT.rain);
+  renderFooter(SNAPSHOT.gauges.updatedAt, false);
+
+  (async function () {
+    try {
+      var res = await fetch("daten.json?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) return;
+      var d = await res.json();
+      if (d.gauges) { renderGauges(d.gauges); renderFooter(d.gauges.updatedAt, true); }
+      if (d.rain) renderRain(d.rain);
+    } catch (e) {
+      /* Der beim Veroeffentlichen eingebaute Stand bleibt stehen. */
+    }
+  })();
+
+})();
+</script>
+
+</body>
+</html>

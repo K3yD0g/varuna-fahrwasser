@@ -1,0 +1,50 @@
+{
+ "gauges": {
+  "updatedAt": "2026-09-15T06:30+02:00",
+  "placeholder": false,
+  "items": [
+   {
+    "id": "MAXAU",
+    "name": "Maxau",
+    "river": "Rhein",
+    "value": 318,
+    "ts": "2026-09-15T05:00:00+02:00",
+    "state": "low",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: 317 → 318 cm seit gestern",
+    "placeholder": false
+   },
+   {
+    "id": "MANNHEIM",
+    "name": "Mannheim",
+    "river": "Rhein",
+    "value": 86,
+    "ts": "2026-09-15T05:00:00+02:00",
+    "state": "low",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 88 → 86 cm seit gestern",
+    "placeholder": false
+   },
+   {
+    "id": "MAINZ",
+    "name": "Mainz",
+    "river": "Rhein",
+    "value": 133,
+    "ts": "2026-09-15T05:00:00+02:00",
+    "state": "low",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: 131 → 133 cm seit gestern",
+    "placeholder": false
+   }
+  ]
+ },
+ "rain": {
+  "updatedAt": "2026-09-15T06:30+02:00",
+  "placeholder": false,
+  "areas": [
+   { "name": "Alpenrheintal / Vorarlberg", "mm": [0, 41, 2, 0, 0, 0, 5] },
+   { "name": "Schwarzwald, Hochlagen", "mm": [0, 7, 0, 0, 0, 0, 2] },
+   { "name": "Oberrhein / Pfalz", "mm": [0, 0, 0, 0, 0, 1, 0] }
+  ]
+ }
+}

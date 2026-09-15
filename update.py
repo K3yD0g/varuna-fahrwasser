@@ -13,6 +13,7 @@ Laeuft ohne Zugangsdaten - beide Quellen sind offen.
 import json
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -169,6 +170,81 @@ def regen_block():
     }
 
 
+# --- Diesel-Schaetzung -------------------------------------------------------
+# Angepasst an zwoelf Rheintank-Rechnungen (Januar bis August 2026) gegen den
+# US-Heizoel-Future, umgerechnet in Euro je 100 Liter. Bestimmtheitsmass 0,85,
+# mittlerer Fehler rund 6 Euro. Die Belege selbst liegen NICHT in diesem
+# Repository - hier steht nur das Ergebnis der Anpassung.
+MODELL_A = 1.3479
+MODELL_B = -11.742
+MODELL_RMSE = 7.7
+
+YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart/"
+GALLONE_L = 3.785411784
+
+
+def yahoo_reihe(symbol, tage=120):
+    """Schlusskurse je Handelstag als {datum: wert}."""
+    jetzt = int(datetime.now(TZ).timestamp())
+    von = jetzt - tage * 86400
+    url = (f"{YAHOO}{urllib.parse.quote(symbol)}"
+           f"?period1={von}&period2={jetzt}&interval=1d")
+    roh = hole(url)["chart"]["result"][0]
+    stempel = roh.get("timestamp") or []
+    schluss = roh["indicators"]["quote"][0].get("close") or []
+    reihe = {}
+    for t, v in zip(stempel, schluss):
+        if v is not None:
+            reihe[datetime.fromtimestamp(t, TZ).date().isoformat()] = v
+    return reihe
+
+
+def diesel_block():
+    try:
+        heizoel = yahoo_reihe("HO=F")
+        kurs = yahoo_reihe("EURUSD=X")
+    except Exception as e:
+        print(f"  Marktdaten nicht erreichbar: {e}", file=sys.stderr)
+        return None
+
+    tage = sorted(set(heizoel) & set(kurs))
+    if not tage:
+        print("  Keine gemeinsamen Handelstage gefunden.", file=sys.stderr)
+        return None
+
+    verlauf = []
+    for t in tage:
+        roh = heizoel[t] / kurs[t] / GALLONE_L * 100      # Euro je 100 Liter
+        verlauf.append({"d": t, "v": round(MODELL_A * roh + MODELL_B, 1)})
+
+    letzter = tage[-1]
+    schaetzung = verlauf[-1]["v"]
+    print(f"  Diesel geschaetzt: {schaetzung} EUR/100L (Marktstand {letzter})")
+
+    return {
+        "updatedAt": datetime.now(TZ).isoformat(timespec="minutes"),
+        "placeholder": False,
+        "estimate": schaetzung,
+        "low": round(schaetzung - MODELL_RMSE),
+        "high": round(schaetzung + MODELL_RMSE),
+        "marketDate": letzter,
+        "heizoelUsdGal": round(heizoel[letzter], 4),
+        "eurUsd": round(kurs[letzter], 4),
+        "history": verlauf[-45:],
+        "model": {"a": MODELL_A, "b": MODELL_B, "r2": 0.853,
+                  "n": 12, "rmse": MODELL_RMSE},
+    }
+
+
+def vorheriges(schluessel):
+    """Alten Stand aus daten.json holen, damit eine Kachel nie leer wird."""
+    try:
+        with open("daten.json", encoding="utf-8") as f:
+            return json.load(f).get(schluessel)
+    except Exception:
+        return None
+
+
 def main():
     print("Pegel:")
     gauges = pegel_block()
@@ -178,21 +254,29 @@ def main():
 
     if rain is None:
         # Lieber den alten Regenstand behalten als die Kachel leeren.
-        try:
-            with open("daten.json", encoding="utf-8") as f:
-                rain = json.load(f).get("rain")
-            print("  Wetterquelle nicht erreichbar, vorheriger Stand bleibt stehen.",
-                  file=sys.stderr)
-        except Exception:
-            rain = {"updatedAt": None, "placeholder": True, "areas": []}
+        rain = vorheriges("rain") or {"updatedAt": None, "placeholder": True,
+                                      "areas": []}
+        print("  Wetterquelle nicht erreichbar, vorheriger Stand bleibt stehen.",
+              file=sys.stderr)
+
+    print("Diesel:")
+    diesel = diesel_block()
+    if diesel is None:
+        diesel = vorheriges("diesel")
+        print("  Marktquelle nicht erreichbar, vorheriger Stand bleibt stehen.",
+              file=sys.stderr)
 
     if all(i["value"] is None for i in gauges["items"]):
         print("Kein einziger Pegelwert abrufbar - daten.json bleibt unveraendert.",
               file=sys.stderr)
         return 1
 
+    ergebnis = {"gauges": gauges, "rain": rain}
+    if diesel:
+        ergebnis["diesel"] = diesel
+
     with open("daten.json", "w", encoding="utf-8") as f:
-        json.dump({"gauges": gauges, "rain": rain}, f, ensure_ascii=False, indent=1)
+        json.dump(ergebnis, f, ensure_ascii=False, indent=1)
         f.write("\n")
 
     print("daten.json geschrieben.")

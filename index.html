@@ -374,6 +374,58 @@ h1 {
 }
 .day.today { color: var(--accent); font-weight: 600; }
 
+/* ---- Diesel ---- */
+.diesel-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px 28px;
+  align-items: center;
+  padding: 20px 22px 18px;
+}
+.diesel-zahl {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+.diesel-zahl small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-left: 5px;
+}
+.diesel-spanne {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-top: 7px;
+  font-variant-numeric: tabular-nums;
+}
+.spark { width: 100%; height: 76px; display: block; }
+.spark-cap {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+.diesel-fuss {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line-soft);
+  padding-top: 12px;
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.diesel-fuss code {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
 #tip {
   position: fixed;
   z-index: 40;
@@ -413,6 +465,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 }
 
 @media (max-width: 560px) {
+  .diesel-body { grid-template-columns: 1fr; padding-inline: 16px; }
+  .diesel-zahl { font-size: 32px; }
   .gauge, .gauge-head { grid-template-columns: 1fr 74px 82px; gap: 4px 10px; }
   .gauge-val, .gauge-ab { font-size: 22px; }
   .gauge-name { font-size: 16px; }
@@ -466,9 +520,18 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     <div id="rain"></div>
   </section>
 
+  <section class="panel" aria-labelledby="h-diesel">
+    <div class="panel-head">
+      <h3 id="h-diesel">Diesel, gesch&auml;tzt</h3>
+      <span class="badge sample" id="diesel-badge">Sch&auml;tzung</span>
+      <p class="note" id="diesel-note"></p>
+    </div>
+    <div id="diesel"></div>
+  </section>
+
   <footer>
     <div id="foot-updated"></div>
-    <div><strong>Quellen:</strong> Pegelst&auml;nde von PEGELONLINE (Wasserstra&szlig;en- und Schifffahrtsverwaltung des Bundes), jeweils der 5-Uhr-Wert, ungepr&uuml;fte Rohdaten. Niederschlagsprognose vom Meteorologischen Institut Norwegen (MET Norway).</div>
+    <div><strong>Quellen:</strong> Pegelst&auml;nde von PEGELONLINE (Wasserstra&szlig;en- und Schifffahrtsverwaltung des Bundes), jeweils der 5-Uhr-Wert, ungepr&uuml;fte Rohdaten. Niederschlagsprognose vom Meteorologischen Institut Norwegen (MET Norway). Marktdaten f&uuml;r die Dieselsch&auml;tzung von Yahoo Finance (US-Heiz&ouml;l-Future, Euro/Dollar).</div>
     <div><span class="sample-key" aria-hidden="true"></span><strong>Beispieldaten</strong> sind orange gekennzeichnet und stammen nicht aus einer Messung.</div>
   </footer>
 
@@ -501,6 +564,16 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         { name: "Schwarzwald, Hochlagen", mm: [0, 7, 0, 0, 0, 0, 2] },
         { name: "Oberrhein / Pfalz", mm: [0, 0, 0, 0, 0, 1, 0] }
       ]
+    },
+    diesel: {
+      placeholder: false,
+      updatedAt: "2026-09-15T11:00:00+02:00",
+      estimate: 135.2, low: 128, high: 143,
+      marketDate: "2026-09-15",
+      heizoelUsdGal: 4.801,
+      eurUsd: 1.1634,
+      history: null,
+      model: { a: 1.3479, b: -11.742, r2: 0.853, n: 12, rmse: 7.7 }
     }
   };
 
@@ -730,6 +803,89 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     }
   }
 
+  /* ---------- diesel ---------- */
+
+  function euro(v) {
+    return v.toFixed(2).replace(".", ",");
+  }
+
+  function sparkline(punkte) {
+    var w = 560, h = 76, pad = 8;
+    var werte = punkte.map(function (p) { return p.v; });
+    var min = Math.min.apply(null, werte), max = Math.max.apply(null, werte);
+    if (max - min < 1) { max = min + 1; }
+    var n = punkte.length;
+    var x = function (i) { return pad + i * (w - 2 * pad) / Math.max(1, n - 1); };
+    var y = function (v) { return pad + (max - v) / (max - min) * (h - 2 * pad); };
+
+    var linie = punkte.map(function (p, i) { return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(p.v).toFixed(1); }).join(" ");
+    var flaeche = linie + " L" + x(n - 1).toFixed(1) + " " + (h - pad) + " L" + x(0).toFixed(1) + " " + (h - pad) + " Z";
+
+    var svg = '<svg class="spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" role="img" ' +
+      'aria-label="Verlauf der geschätzten Preise, ' + euro(min) + ' bis ' + euro(max) + ' Euro je 100 Liter">' +
+      '<path d="' + flaeche + '" fill="var(--calm-soft)"></path>' +
+      '<path d="' + linie + '" fill="none" stroke="var(--calm)" stroke-width="2" ' +
+      'stroke-linejoin="round" stroke-linecap="round"></path>' +
+      '<circle cx="' + x(n - 1).toFixed(1) + '" cy="' + y(werte[n - 1]).toFixed(1) + '" r="4" ' +
+      'fill="var(--calm)" stroke="var(--panel)" stroke-width="2"></circle>' +
+      '</svg>';
+    return { svg: svg, min: min, max: max };
+  }
+
+  function renderDiesel(d) {
+    var host = document.getElementById("diesel");
+    var badge = document.getElementById("diesel-badge");
+    var note = document.getElementById("diesel-note");
+    host.textContent = "";
+
+    if (!d || d.estimate == null) {
+      note.textContent = "Marktdaten konnten nicht geladen werden.";
+      host.appendChild(el("div", "diesel-fuss", "Kein Marktstand verfügbar."));
+      return;
+    }
+
+    note.textContent = "Gerechneter Richtwert, kein Angebot. Grundlage ist der US-Heizöl-Future, " +
+      "umgerechnet in Euro und angepasst an die eigenen Rheintank-Rechnungen.";
+    badge.className = "badge sample";
+    badge.textContent = "Schätzung";
+
+    var body = el("div", "diesel-body");
+
+    var links = el("div");
+    var zahl = el("div", "diesel-zahl");
+    zahl.appendChild(document.createTextNode(euro(d.estimate)));
+    zahl.appendChild(el("small", null, "€/100 L"));
+    links.appendChild(zahl);
+    links.appendChild(el("div", "diesel-spanne", "wahrscheinlich " + d.low + " bis " + d.high + " €"));
+    body.appendChild(links);
+
+    var rechts = el("div");
+    if (d.history && d.history.length > 2) {
+      var sp = sparkline(d.history);
+      var box = document.createElement("div");
+      box.innerHTML = sp.svg;
+      rechts.appendChild(box);
+      var cap = el("div", "spark-cap");
+      cap.appendChild(el("span", null, d.history[0].d.slice(8, 10) + "." + d.history[0].d.slice(5, 7) + "."));
+      cap.appendChild(el("span", null, "Tief " + euro(sp.min) + " · Hoch " + euro(sp.max)));
+      cap.appendChild(el("span", null, "heute"));
+      rechts.appendChild(cap);
+    }
+    body.appendChild(rechts);
+
+    var m = d.model || {};
+    var fuss = el("div", "diesel-fuss");
+    fuss.textContent = "Marktstand vom " + d.marketDate + ": Heizöl " + d.heizoelUsdGal +
+      " USD/Gallone, Euro/Dollar " + d.eurUsd + ". " +
+      "Die Formel steckt " + (m.n || "?") + " eigene Rechnungen ab, " +
+      "trifft sie im Mittel auf rund " + String(m.rmse || "?").replace(".", ",") +
+      " € genau (Bestimmtheitsmaß " + String(m.r2 || "?").replace(".", ",") +
+      "). Zum Bunkern bleibt der Anruf bei Rheintank maßgeblich.";
+    body.appendChild(fuss);
+
+    host.appendChild(body);
+  }
+
   /* ---------- tooltip ---------- */
 
   var tip = document.getElementById("tip");
@@ -760,6 +916,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 
   renderGauges(SNAPSHOT.gauges);
   renderRain(SNAPSHOT.rain);
+  renderDiesel(SNAPSHOT.diesel);
   renderFooter(SNAPSHOT.gauges.updatedAt, false);
 
   (async function () {
@@ -769,6 +926,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       var d = await res.json();
       if (d.gauges) { renderGauges(d.gauges); renderFooter(d.gauges.updatedAt, true); }
       if (d.rain) renderRain(d.rain);
+      if (d.diesel) renderDiesel(d.diesel);
     } catch (e) {
       /* Der beim Veroeffentlichen eingebaute Stand bleibt stehen. */
     }

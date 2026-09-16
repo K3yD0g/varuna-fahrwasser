@@ -264,6 +264,8 @@ h1 {
   grid-row: 1 / span 2;
   grid-column: 3;
   text-align: right;
+}
+.gauge-ab-zahl {
   font-family: var(--f-mono);
   font-variant-numeric: tabular-nums;
   font-size: 30px;
@@ -272,7 +274,15 @@ h1 {
   white-space: nowrap;
   color: var(--accent);
 }
-.gauge-ab small {
+.gauge-t {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-top: 4px;
+  white-space: nowrap;
+}
+.gauge-ab-zahl small {
   font-size: 13px;
   font-weight: 400;
   color: var(--ink-3);
@@ -467,8 +477,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 @media (max-width: 560px) {
   .diesel-body { grid-template-columns: 1fr; padding-inline: 16px; }
   .diesel-zahl { font-size: 32px; }
-  .gauge, .gauge-head { grid-template-columns: 1fr 74px 82px; gap: 4px 10px; }
-  .gauge-val, .gauge-ab { font-size: 22px; }
+  .gauge, .gauge-head { grid-template-columns: 1fr 70px 88px; gap: 4px 10px; }
+  .gauge-val, .gauge-ab-zahl { font-size: 22px; }
   .gauge-name { font-size: 16px; }
   .gauge-name span { display: block; margin-left: 0; }
   .area, .panel-head, .gauge, .gauge-head { padding-inline: 16px; }
@@ -506,7 +516,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       <p class="note" id="pegel-note"></p>
     </div>
     <div class="gauge-head" aria-hidden="true">
-      <span>Pegelstelle</span><span>Pegel</span><span>Abladetiefe</span>
+      <span>Pegelstelle</span><span>Pegel</span><span>Abladetiefe / Ladung</span>
     </div>
     <div id="gauges"></div>
   </section>
@@ -592,6 +602,39 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     return (cm / 100).toFixed(2).replace(".", ",");
   }
 
+  /* Eichskala aus Eichschein MAD 1777 (GMS Varuna, ex Toketi II).
+     Stützstellen je 10 cm Eintauchung, Tragfähigkeit in Tonnen Süßwasser.
+     Zwischen zwei Stützstellen wächst die Verdrängung linear — die
+     Zwischenwerte treffen die Tabelle des Eichscheins deshalb exakt.
+     Leerebene bei 89,3 cm, größte Eintauchung 330 cm = 2143,033 t. */
+  var LEEREBENE_CM = 89.3;
+  var EICHSKALA = [
+    [90, 5.983], [100, 91.573], [110, 177.413], [120, 263.543], [130, 349.953],
+    [140, 436.663], [150, 523.693], [160, 611.033], [170, 698.693], [180, 786.653],
+    [190, 874.883], [200, 963.333], [210, 1052.113], [220, 1141.223], [230, 1230.663],
+    [240, 1320.433], [250, 1410.533], [260, 1500.963], [270, 1591.723], [280, 1682.813],
+    [290, 1774.233], [300, 1865.983], [310, 1958.033], [320, 2050.383], [330, 2143.033]
+  ];
+
+  function tonnen(cm) {
+    if (cm == null || cm <= LEEREBENE_CM) return 0;
+    if (cm >= 330) return EICHSKALA[EICHSKALA.length - 1][1];
+    if (cm <= 90) {
+      return 5.983 * (cm - LEEREBENE_CM) / (90 - LEEREBENE_CM);
+    }
+    for (var i = 1; i < EICHSKALA.length; i++) {
+      if (cm <= EICHSKALA[i][0]) {
+        var a = EICHSKALA[i - 1], b = EICHSKALA[i];
+        return a[1] + (b[1] - a[1]) * (cm - a[0]) / (b[0] - a[0]);
+      }
+    }
+    return null;
+  }
+
+  function fmtT(t) {
+    return Math.round(t).toLocaleString("de-DE");
+  }
+
   function offsetLabel(g) {
     var off = (typeof g.offsetCm === "number") ? g.offsetCm : OFFSET_CM[g.id];
     if (typeof off !== "number") return "";
@@ -648,12 +691,16 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 
       var abCell = el("div", "gauge-ab");
       var abCm = abladungCm(g);
+      var zahl = el("div", "gauge-ab-zahl");
       if (abCm == null) {
-        abCell.textContent = "—";
+        zahl.textContent = "—";
       } else {
-        abCell.appendChild(document.createTextNode(fmtM(abCm)));
-        abCell.appendChild(el("small", null, "m"));
+        zahl.appendChild(document.createTextNode(fmtM(abCm)));
+        zahl.appendChild(el("small", null, "m"));
       }
+      abCell.appendChild(zahl);
+      var t = abCm == null ? null : tonnen(abCm);
+      abCell.appendChild(el("div", "gauge-t", t == null ? "" : fmtT(t) + " t"));
       abCell.title = "Pegel " + g.value + " cm " + offsetLabel(g);
       row.appendChild(abCell);
 
@@ -691,6 +738,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     document.getElementById("pegel-note").textContent =
       "5-Uhr-Werte aus der Messreihe von PEGELONLINE. Abladetiefe = Pegel " +
       items.map(function (g) { return g.name + " " + offsetLabel(g); }).join(", ") + ". " +
+      "Die Tonnage stammt aus der Eichskala des Eichscheins MAD 1777 (Süßwasser, " +
+      "Leerebene 89,3 cm) und ist noch nicht um Bunker, Brauchwasser und Vorräte gekürzt. " +
       (oldest > 27 ? "Ein Pegel hat den 5-Uhr-Wert von heute nicht geliefert – am Zeitstempel markiert." : "");
 
     renderVerdict(items);
@@ -725,7 +774,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     var abEl = document.getElementById("verdict-ab");
     if (!abs.length) { abEl.textContent = ""; return; }
     var min = abs.reduce(function (m, a) { return a.cm < m.cm ? a : m; });
-    abEl.textContent = "Engster Wert: " + fmtM(min.cm) + " m bei " + min.name;
+    abEl.textContent = "Engster Wert: " + fmtM(min.cm) + " m bei " + min.name +
+      " — das sind " + fmtT(tonnen(min.cm)) + " t Ladung";
   }
 
   /* ---------- rain ---------- */

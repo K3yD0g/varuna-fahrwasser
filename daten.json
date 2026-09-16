@@ -1,79 +1,79 @@
 {
  "gauges": {
-  "updatedAt": "2026-09-15T11:07+02:00",
+  "updatedAt": "2026-09-16T05:47+02:00",
   "placeholder": false,
   "items": [
    {
     "id": "MAXAU",
     "name": "Maxau",
     "river": "Rhein",
-    "value": 318,
-    "ts": "2026-09-15T05:00:00+02:00",
+    "value": 314,
+    "ts": "2026-09-16T05:00:00+02:00",
     "state": "low",
-    "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 317 → 318 cm seit gestern",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 318 → 314 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MANNHEIM",
     "name": "Mannheim",
     "river": "Rhein",
-    "value": 86,
-    "ts": "2026-09-15T05:00:00+02:00",
+    "value": 83,
+    "ts": "2026-09-16T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 88 → 86 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 86 → 83 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MAINZ",
     "name": "Mainz",
     "river": "Rhein",
-    "value": 133,
-    "ts": "2026-09-15T05:00:00+02:00",
+    "value": 121,
+    "ts": "2026-09-16T05:00:00+02:00",
     "state": "low",
-    "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 131 → 133 cm seit gestern",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 133 → 121 cm seit gestern",
     "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-09-15T11:07+02:00",
+  "updatedAt": "2026-09-16T05:48+02:00",
   "placeholder": false,
   "areas": [
    {
     "name": "Alpenrheintal / Vorarlberg",
     "mm": [
-     0,
-     11,
-     0,
-     0,
+     14,
+     2,
      0,
      0,
-     5
+     0,
+     4,
+     0
     ]
    },
    {
     "name": "Schwarzwald, Hochlagen",
     "mm": [
-     0,
-     6,
-     0,
+     2,
      0,
      0,
      0,
-     2
+     0,
+     0,
+     0
     ]
    },
    {
     "name": "Oberrhein / Pfalz",
     "mm": [
      0,
-     1,
      0,
      0,
      0,
+     2,
      0,
      0
     ]
@@ -81,19 +81,15 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-09-15T11:07+02:00",
+  "updatedAt": "2026-09-16T05:48+02:00",
   "placeholder": false,
-  "estimate": 140.4,
-  "low": 133,
-  "high": 148,
-  "marketDate": "2026-09-15",
-  "heizoelUsdGal": 4.9304,
-  "eurUsd": 1.1538,
+  "estimate": 141.5,
+  "low": 134,
+  "high": 149,
+  "marketDate": "2026-09-16",
+  "heizoelUsdGal": 4.9685,
+  "eurUsd": 1.1543,
   "history": [
-   {
-    "d": "2026-07-14",
-    "v": 113.8
-   },
    {
     "d": "2026-07-15",
     "v": 111.3
@@ -268,7 +264,11 @@
    },
    {
     "d": "2026-09-15",
-    "v": 140.4
+    "v": 150.5
+   },
+   {
+    "d": "2026-09-16",
+    "v": 141.5
    }
   ],
   "model": {

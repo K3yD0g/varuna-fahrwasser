@@ -1,45 +1,45 @@
 {
  "gauges": {
-  "updatedAt": "2026-09-18T06:46+02:00",
+  "updatedAt": "2026-09-19T05:45+02:00",
   "placeholder": false,
   "items": [
    {
     "id": "MAXAU",
     "name": "Maxau",
     "river": "Rhein",
-    "value": 309,
-    "ts": "2026-09-18T05:00:00+02:00",
+    "value": 307,
+    "ts": "2026-09-19T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 312 → 309 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 309 → 307 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MANNHEIM",
     "name": "Mannheim",
     "river": "Rhein",
-    "value": 82,
-    "ts": "2026-09-18T05:00:00+02:00",
+    "value": 77,
+    "ts": "2026-09-19T05:00:00+02:00",
     "state": "low",
-    "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 81 → 82 cm seit gestern",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 82 → 77 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MAINZ",
     "name": "Mainz",
     "river": "Rhein",
-    "value": 121,
-    "ts": "2026-09-18T05:00:00+02:00",
+    "value": 117,
+    "ts": "2026-09-19T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 122 → 121 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 121 → 117 cm seit gestern",
     "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-09-18T06:47+02:00",
+  "updatedAt": "2026-09-19T05:45+02:00",
   "placeholder": false,
   "areas": [
    {
@@ -47,7 +47,7 @@
     "mm": [
      0,
      0,
-     0,
+     6,
      0,
      0,
      0,
@@ -69,8 +69,8 @@
    {
     "name": "Oberrhein / Pfalz",
     "mm": [
-     3,
      0,
+     1,
      0,
      0,
      0,
@@ -81,14 +81,14 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-09-18T06:47+02:00",
+  "updatedAt": "2026-09-19T05:45+02:00",
   "placeholder": false,
-  "estimate": 138.8,
-  "low": 131,
+  "estimate": 138.2,
+  "low": 130,
   "high": 146,
   "marketDate": "2026-09-18",
-  "heizoelUsdGal": 4.8598,
-  "eurUsd": 1.1492,
+  "heizoelUsdGal": 4.8367,
+  "eurUsd": 1.1489,
   "history": [
    {
     "d": "2026-07-17",
@@ -268,7 +268,7 @@
    },
    {
     "d": "2026-09-18",
-    "v": 138.8
+    "v": 138.2
    }
   ],
   "model": {

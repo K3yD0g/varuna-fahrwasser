@@ -1,45 +1,45 @@
 {
  "gauges": {
-  "updatedAt": "2026-09-20T06:46+02:00",
+  "updatedAt": "2026-09-21T05:48+02:00",
   "placeholder": false,
   "items": [
    {
     "id": "MAXAU",
     "name": "Maxau",
     "river": "Rhein",
-    "value": 306,
-    "ts": "2026-09-20T05:00:00+02:00",
+    "value": 297,
+    "ts": "2026-09-21T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 307 → 306 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 306 → 297 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MANNHEIM",
     "name": "Mannheim",
     "river": "Rhein",
-    "value": 74,
-    "ts": "2026-09-20T05:00:00+02:00",
+    "value": 73,
+    "ts": "2026-09-21T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 77 → 74 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 74 → 73 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MAINZ",
     "name": "Mainz",
     "river": "Rhein",
-    "value": 117,
-    "ts": "2026-09-20T05:00:00+02:00",
+    "value": 113,
+    "ts": "2026-09-21T05:00:00+02:00",
     "state": "low",
-    "trend": "steady",
-    "trendNote": "5-Uhr-Werte: 117 → 117 cm seit gestern",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 117 → 113 cm seit gestern",
     "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-09-20T06:46+02:00",
+  "updatedAt": "2026-09-21T05:48+02:00",
   "placeholder": false,
   "areas": [
    {
@@ -48,7 +48,7 @@
      0,
      0,
      0,
-     0,
+     1,
      0,
      0,
      0
@@ -73,7 +73,7 @@
      0,
      0,
      0,
-     1,
+     0,
      0,
      0
     ]
@@ -81,19 +81,15 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-09-20T06:46+02:00",
+  "updatedAt": "2026-09-21T05:48+02:00",
   "placeholder": false,
-  "estimate": 138.4,
-  "low": 131,
-  "high": 146,
-  "marketDate": "2026-09-18",
-  "heizoelUsdGal": 4.8444,
-  "eurUsd": 1.149,
+  "estimate": 137.4,
+  "low": 130,
+  "high": 145,
+  "marketDate": "2026-09-21",
+  "heizoelUsdGal": 4.8098,
+  "eurUsd": 1.148,
   "history": [
-   {
-    "d": "2026-07-17",
-    "v": 114.7
-   },
    {
     "d": "2026-07-20",
     "v": 116.6
@@ -268,7 +264,11 @@
    },
    {
     "d": "2026-09-18",
-    "v": 138.4
+    "v": 145.2
+   },
+   {
+    "d": "2026-09-21",
+    "v": 137.4
    }
   ],
   "model": {

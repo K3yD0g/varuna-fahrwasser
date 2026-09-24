@@ -1,6 +1,6 @@
 {
  "gauges": {
-  "updatedAt": "2026-09-24T06:47+02:00",
+  "updatedAt": "2026-09-24T16:09+02:00",
   "placeholder": false,
   "items": [
    {
@@ -35,11 +35,22 @@
     "trend": "falling",
     "trendNote": "5-Uhr-Werte: 107 → 102 cm seit gestern",
     "placeholder": false
+   },
+   {
+    "id": "KAUB",
+    "name": "Kaub",
+    "river": "Rhein",
+    "value": 8,
+    "ts": "2026-09-24T05:00:00+02:00",
+    "state": "low",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 14 → 8 cm seit gestern",
+    "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-09-24T06:47+02:00",
+  "updatedAt": "2026-09-24T16:09+02:00",
   "placeholder": false,
   "areas": [
    {
@@ -81,14 +92,14 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-09-24T06:47+02:00",
+  "updatedAt": "2026-09-24T16:09+02:00",
   "placeholder": false,
-  "estimate": 133.6,
-  "low": 126,
-  "high": 141,
+  "estimate": 135.4,
+  "low": 128,
+  "high": 143,
   "marketDate": "2026-09-24",
-  "heizoelUsdGal": 4.6482,
-  "eurUsd": 1.1387,
+  "heizoelUsdGal": 4.7032,
+  "eurUsd": 1.1379,
   "history": [
    {
     "d": "2026-07-23",
@@ -268,7 +279,7 @@
    },
    {
     "d": "2026-09-24",
-    "v": 133.6
+    "v": 135.4
    }
   ],
   "model": {

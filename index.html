@@ -588,8 +588,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   };
 
   /* Abladetiefe = Pegelstand plus fester Zuschlag je Pegel, in cm.
-     Maxau minus 160, Mannheim plus 70, Mainz plus 30. */
-  var OFFSET_CM = { MAXAU: -160, MANNHEIM: 70, MAINZ: 30 };
+     Maxau minus 160, Mannheim plus 70, Mainz plus 30, Kaub plus 100. */
+  var OFFSET_CM = { MAXAU: -160, MANNHEIM: 70, MAINZ: 30, KAUB: 100 };
 
   function abladungCm(g) {
     if (g == null || g.value == null) return null;
@@ -769,13 +769,23 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         : "Keine Pegeldaten geladen.";
     }
 
-    var abs = items.map(function (g) { return { name: g.name, cm: abladungCm(g) }; })
+    /* Kaub liegt am Mittelrhein und wird auf den meisten Fahrten gar nicht
+       passiert. Der Pegel steht deshalb in der Tabelle, bleibt aber aus der
+       Kopfzeile heraus — sonst stünde dort an jedem Niedrigwassertag eine
+       Menge, die für die gefahrene Strecke nicht gilt. */
+    var NICHT_IN_KOPFZEILE = { KAUB: true };
+
+    var abs = items.filter(function (g) { return !NICHT_IN_KOPFZEILE[g.id]; })
+                   .map(function (g) { return { name: g.name, cm: abladungCm(g) }; })
                    .filter(function (a) { return a.cm != null; });
     var abEl = document.getElementById("verdict-ab");
     if (!abs.length) { abEl.textContent = ""; return; }
     var min = abs.reduce(function (m, a) { return a.cm < m.cm ? a : m; });
+    var ausgenommen = items.filter(function (g) { return NICHT_IN_KOPFZEILE[g.id]; })
+                           .map(function (g) { return g.name; });
     abEl.textContent = "Engster Wert: " + fmtM(min.cm) + " m bei " + min.name +
-      " — das sind " + fmtT(tonnen(min.cm)) + " t Ladung";
+      " — das sind " + fmtT(tonnen(min.cm)) + " t Ladung" +
+      (ausgenommen.length ? " (ohne " + ausgenommen.join(", ") + ")" : "");
   }
 
   /* ---------- rain ---------- */

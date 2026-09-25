@@ -172,6 +172,7 @@ h1 {
   margin: 0;
   letter-spacing: .005em;
 }
+.panel-head .note:empty { display: none; }
 .panel-head .note {
   font-size: 13px;
   color: var(--ink-3);
@@ -192,23 +193,30 @@ h1 {
 }
 .badge.live { color: var(--accent); }
 
-.btn-jetzt {
+.umschalter {
   margin-left: auto;
+  display: inline-flex;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.umschalter button {
   font-family: var(--f-mono);
   font-size: 11px;
   letter-spacing: .06em;
   padding: 6px 12px;
-  border-radius: 3px;
-  border: 1px solid var(--accent);
+  border: 0;
   background: transparent;
   color: var(--accent);
   cursor: pointer;
   white-space: nowrap;
   transition: background .12s ease, color .12s ease;
 }
-.btn-jetzt:hover:not(:disabled) { background: var(--accent); color: var(--panel); }
-.btn-jetzt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.btn-jetzt:disabled { opacity: .55; cursor: default; }
+.umschalter button + button { border-left: 1px solid var(--accent); }
+.umschalter button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+.umschalter button:hover:not(:disabled):not([aria-pressed="true"]) { background: var(--calm-soft); }
+.umschalter button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.umschalter button:disabled { opacity: .55; cursor: default; }
 .badge.sample { color: var(--signal); background: var(--signal-soft); border-color: transparent; }
 
 /* ---- gauge rows ---- */
@@ -515,7 +523,6 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   <header>
     <p class="eyebrow">GMS Varuna · BSR 26031 · RenShip GmbH</p>
     <h1>Fahrwasser &amp; Einzugsgebiet</h1>
-    <p class="standfirst">Zwei Dinge, die die Abladung bestimmen: was die Pegel auf der Strecke Liedolsheim&ndash;Frankfurt jetzt zeigen, und wie viel Regen im Einzugsgebiet unterwegs ist.</p>
   </header>
 
   <section class="verdict" id="verdict" aria-live="polite">
@@ -531,7 +538,10 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     <div class="panel-head">
       <h3 id="h-pegel">Pegel</h3>
       <span class="badge live" id="pegel-badge">Live</span>
-      <button type="button" class="btn-jetzt" id="jetzt">Jetzt abrufen</button>
+      <div class="umschalter" role="group" aria-label="Welche Pegelwerte anzeigen">
+        <button type="button" id="btn-5uhr" aria-pressed="true">5-Uhr-Wert</button>
+        <button type="button" id="btn-aktuell" aria-pressed="false">Aktuell</button>
+      </div>
       <p class="note" id="pegel-note"></p>
     </div>
     <div class="gauge-head" aria-hidden="true">
@@ -544,7 +554,6 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     <div class="panel-head">
       <h3 id="h-regen">Regen im Einzugsgebiet</h3>
       <span class="badge sample" id="regen-badge">Beispieldaten</span>
-      <p class="note">Niederschlag der n&auml;chsten sieben Tage in mm. Was in den Bergen f&auml;llt, steht zwei bis vier Tage sp&auml;ter am Pegel &ndash; lokaler Regen in Siebeldingen sagt wenig.</p>
     </div>
     <div id="rain"></div>
   </section>
@@ -560,8 +569,6 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 
   <footer>
     <div id="foot-updated"></div>
-    <div><strong>Quellen:</strong> Pegelst&auml;nde von PEGELONLINE (Wasserstra&szlig;en- und Schifffahrtsverwaltung des Bundes), jeweils der 5-Uhr-Wert, ungepr&uuml;fte Rohdaten. Niederschlagsprognose vom Meteorologischen Institut Norwegen (MET Norway). Marktdaten f&uuml;r die Dieselsch&auml;tzung von Yahoo Finance (US-Heiz&ouml;l-Future, Euro/Dollar).</div>
-    <div><span class="sample-key" aria-hidden="true"></span><strong>Beispieldaten</strong> sind orange gekennzeichnet und stammen nicht aus einer Messung.</div>
   </footer>
 
 </div>
@@ -751,22 +758,9 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     else if (istLive) { badge.className = "badge live"; badge.textContent = "Momentanwerte"; }
     else { badge.className = "badge live"; badge.textContent = "Gemessen"; }
 
-    var oldest = items.reduce(function (m, g) {
-      var h = hoursSince(g.ts);
-      return h != null && h > m ? h : m;
-    }, 0);
-
-    var grundlage = istLive
-      ? "Momentanwerte, eben bei PEGELONLINE abgerufen. Planungsgrundlage bleibt der 5-Uhr-Stand – " +
-        "er steht nach dem Neuladen wieder da. "
-      : "5-Uhr-Werte aus der Messreihe von PEGELONLINE. " +
-        (oldest > 27 ? "Ein Pegel hat den 5-Uhr-Wert von heute nicht geliefert – am Zeitstempel markiert. " : "");
-
-    document.getElementById("pegel-note").textContent = grundlage +
+    document.getElementById("pegel-note").textContent =
       "Abladetiefe = Pegel " +
-      items.map(function (g) { return g.name + " " + offsetLabel(g); }).join(", ") + ". " +
-      "Die Tonnage stammt aus der Eichskala des Eichscheins MAD 1777 (Süßwasser, " +
-      "Leerebene 89,3 cm) und ist noch nicht um Bunker, Brauchwasser und Vorräte gekürzt.";
+      items.map(function (g) { return g.name + " " + offsetLabel(g); }).join(" · ");
 
     renderVerdict(items);
   }
@@ -895,20 +889,20 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   var TAGESSTAND = null;   // zuletzt geladener 5-Uhr-Stand
   var LIVE = false;
 
-  function knopfText() {
-    document.getElementById("jetzt").textContent =
-      LIVE ? "Zurück zum 5-Uhr-Stand" : "Jetzt abrufen";
+  function knoepfeSetzen() {
+    document.getElementById("btn-5uhr").setAttribute("aria-pressed", LIVE ? "false" : "true");
+    document.getElementById("btn-aktuell").setAttribute("aria-pressed", LIVE ? "true" : "false");
   }
 
-  async function jetztAbrufen() {
-    var btn = document.getElementById("jetzt");
+  function fuenfUhrZeigen() {
+    LIVE = false;
+    renderGauges(TAGESSTAND, false);
+    knoepfeSetzen();
+  }
 
-    if (LIVE) {                       // zurück zum Tagesstand
-      LIVE = false;
-      renderGauges(TAGESSTAND, false);
-      knopfText();
-      return;
-    }
+  /* Holt bei jedem Druck frisch – auch wenn schon Momentanwerte angezeigt werden. */
+  async function aktuellAbrufen() {
+    var btn = document.getElementById("btn-aktuell");
     if (!TAGESSTAND || !TAGESSTAND.items) return;
 
     btn.disabled = true;
@@ -942,11 +936,13 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         "Abruf fehlgeschlagen – PEGELONLINE antwortet gerade nicht. Angezeigt bleibt der 5-Uhr-Stand.";
     } finally {
       btn.disabled = false;
-      knopfText();
+      btn.textContent = "Aktuell";
+      knoepfeSetzen();
     }
   }
 
-  document.getElementById("jetzt").addEventListener("click", jetztAbrufen);
+  document.getElementById("btn-5uhr").addEventListener("click", fuenfUhrZeigen);
+  document.getElementById("btn-aktuell").addEventListener("click", aktuellAbrufen);
 
   /* ---------- diesel ---------- */
 
@@ -989,8 +985,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       return;
     }
 
-    note.textContent = "Gerechneter Richtwert, kein Angebot. Grundlage ist der US-Heizöl-Future, " +
-      "umgerechnet in Euro und angepasst an die eigenen Rheintank-Rechnungen.";
+    note.textContent = "";
     badge.className = "badge sample";
     badge.textContent = "Schätzung";
 
@@ -1018,15 +1013,6 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     }
     body.appendChild(rechts);
 
-    var m = d.model || {};
-    var fuss = el("div", "diesel-fuss");
-    fuss.textContent = "Marktstand vom " + d.marketDate + ": Heizöl " + d.heizoelUsdGal +
-      " USD/Gallone, Euro/Dollar " + d.eurUsd + ". " +
-      "Die Formel steckt " + (m.n || "?") + " eigene Rechnungen ab, " +
-      "trifft sie im Mittel auf rund " + String(m.rmse || "?").replace(".", ",") +
-      " € genau (Bestimmtheitsmaß " + String(m.r2 || "?").replace(".", ",") +
-      "). Zum Bunkern bleibt der Anruf bei Rheintank maßgeblich.";
-    body.appendChild(fuss);
 
     host.appendChild(body);
   }
@@ -1054,7 +1040,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   function renderFooter(gaugesUpdated, live) {
     var f = document.getElementById("foot-updated");
     f.textContent = (live ? "Zuletzt aktualisiert " : "Eingebauter Stand: ") +
-      fmtDateTime(gaugesUpdated) + ". Die Daten werden jeden Morgen automatisch erneuert.";
+      fmtDateTime(gaugesUpdated);
   }
 
   /* ---------- boot ---------- */

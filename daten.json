@@ -1,56 +1,56 @@
 {
  "gauges": {
-  "updatedAt": "2026-09-24T16:09+02:00",
+  "updatedAt": "2026-09-25T05:47+02:00",
   "placeholder": false,
   "items": [
    {
     "id": "MAXAU",
     "name": "Maxau",
     "river": "Rhein",
-    "value": 283,
-    "ts": "2026-09-24T05:00:00+02:00",
+    "value": 288,
+    "ts": "2026-09-25T05:00:00+02:00",
     "state": "low",
-    "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 284 → 283 cm seit gestern",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: 283 → 288 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MANNHEIM",
     "name": "Mannheim",
     "river": "Rhein",
-    "value": 56,
-    "ts": "2026-09-24T05:00:00+02:00",
+    "value": 54,
+    "ts": "2026-09-25T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 61 → 56 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 56 → 54 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MAINZ",
     "name": "Mainz",
     "river": "Rhein",
-    "value": 102,
-    "ts": "2026-09-24T05:00:00+02:00",
+    "value": 99,
+    "ts": "2026-09-25T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 107 → 102 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 102 → 99 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "KAUB",
     "name": "Kaub",
     "river": "Rhein",
-    "value": 8,
-    "ts": "2026-09-24T05:00:00+02:00",
+    "value": 5,
+    "ts": "2026-09-25T05:00:00+02:00",
     "state": "low",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 14 → 8 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 8 → 5 cm seit gestern",
     "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-09-24T16:09+02:00",
+  "updatedAt": "2026-09-25T05:47+02:00",
   "placeholder": false,
   "areas": [
    {
@@ -74,7 +74,7 @@
      0,
      0,
      0,
-     0
+     2
     ]
    },
    {
@@ -86,25 +86,21 @@
      0,
      0,
      0,
-     0
+     1
     ]
    }
   ]
  },
  "diesel": {
-  "updatedAt": "2026-09-24T16:09+02:00",
+  "updatedAt": "2026-09-25T05:47+02:00",
   "placeholder": false,
-  "estimate": 135.4,
-  "low": 128,
-  "high": 143,
-  "marketDate": "2026-09-24",
-  "heizoelUsdGal": 4.7032,
-  "eurUsd": 1.1379,
+  "estimate": 128.4,
+  "low": 121,
+  "high": 136,
+  "marketDate": "2026-09-25",
+  "heizoelUsdGal": 4.4768,
+  "eurUsd": 1.1373,
   "history": [
-   {
-    "d": "2026-07-23",
-    "v": 123.7
-   },
    {
     "d": "2026-07-24",
     "v": 119.1
@@ -279,7 +275,11 @@
    },
    {
     "d": "2026-09-24",
-    "v": 135.4
+    "v": 136.2
+   },
+   {
+    "d": "2026-09-25",
+    "v": 128.4
    }
   ],
   "model": {

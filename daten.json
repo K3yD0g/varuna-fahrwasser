@@ -1,6 +1,6 @@
 {
  "gauges": {
-  "updatedAt": "2026-09-27T06:47+02:00",
+  "updatedAt": "2026-09-27T10:19+02:00",
   "placeholder": false,
   "items": [
    {
@@ -23,6 +23,17 @@
     "state": "low",
     "trend": "rising",
     "trendNote": "5-Uhr-Werte: 56 → 61 cm seit gestern",
+    "placeholder": false
+   },
+   {
+    "id": "WORMS",
+    "name": "Worms",
+    "river": "Rhein",
+    "value": -23,
+    "ts": "2026-09-27T05:00:00+02:00",
+    "state": "low",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: -25 → -23 cm seit gestern",
     "placeholder": false
    },
    {
@@ -50,7 +61,7 @@
   ]
  },
  "rain": {
-  "updatedAt": "2026-09-27T06:47+02:00",
+  "updatedAt": "2026-09-27T10:19+02:00",
   "placeholder": false,
   "areas": [
    {
@@ -92,7 +103,7 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-09-27T06:47+02:00",
+  "updatedAt": "2026-09-27T10:19+02:00",
   "placeholder": false,
   "estimate": 127.9,
   "low": 120,

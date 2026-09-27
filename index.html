@@ -614,8 +614,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   };
 
   /* Abladetiefe = Pegelstand plus fester Zuschlag je Pegel, in cm.
-     Maxau minus 160, Mannheim plus 70, Mainz plus 30, Kaub plus 100. */
-  var OFFSET_CM = { MAXAU: -160, MANNHEIM: 70, MAINZ: 30, KAUB: 100 };
+     Maxau minus 160, Mannheim plus 70, Worms plus 160, Mainz plus 30, Kaub plus 120. */
+  var OFFSET_CM = { MAXAU: -160, MANNHEIM: 70, WORMS: 160, MAINZ: 30, KAUB: 120 };
 
   function abladungCm(g) {
     if (g == null || g.value == null) return null;

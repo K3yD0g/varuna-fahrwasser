@@ -26,6 +26,7 @@ USER_AGENT = "varuna-fahrwasser/1.0 (info@renship.de)"
 PEGEL = [
     {"id": "MAXAU",    "name": "Maxau",     "river": "Rhein"},
     {"id": "MANNHEIM", "name": "Mannheim",  "river": "Rhein"},
+    {"id": "WORMS",    "name": "Worms",     "river": "Rhein"},
     {"id": "MAINZ",    "name": "Mainz",     "river": "Rhein"},
     {"id": "KAUB",     "name": "Kaub",      "river": "Rhein"},
 ]

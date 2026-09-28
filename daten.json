@@ -1,6 +1,6 @@
 {
  "gauges": {
-  "updatedAt": "2026-09-28T05:50+02:00",
+  "updatedAt": "2026-09-28T06:50+02:00",
   "placeholder": false,
   "items": [
    {
@@ -61,7 +61,7 @@
   ]
  },
  "rain": {
-  "updatedAt": "2026-09-28T05:50+02:00",
+  "updatedAt": "2026-09-28T06:50+02:00",
   "placeholder": false,
   "areas": [
    {
@@ -103,14 +103,14 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-09-28T05:50+02:00",
+  "updatedAt": "2026-09-28T06:50+02:00",
   "placeholder": false,
-  "estimate": 130.7,
+  "estimate": 131.1,
   "low": 123,
-  "high": 138,
+  "high": 139,
   "marketDate": "2026-09-28",
-  "heizoelUsdGal": 4.5575,
-  "eurUsd": 1.1391,
+  "heizoelUsdGal": 4.569,
+  "eurUsd": 1.1392,
   "history": [
    {
     "d": "2026-07-27",
@@ -290,7 +290,7 @@
    },
    {
     "d": "2026-09-28",
-    "v": 130.7
+    "v": 131.1
    }
   ],
   "model": {

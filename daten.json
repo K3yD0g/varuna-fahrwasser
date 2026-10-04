@@ -1,6 +1,6 @@
 {
  "gauges": {
-  "updatedAt": "2026-10-04T07:30+02:00",
+  "updatedAt": "2026-10-04T20:17+02:00",
   "placeholder": false,
   "items": [
    {
@@ -48,6 +48,17 @@
     "placeholder": false
    },
    {
+    "id": "OESTRICH",
+    "name": "Oestrich",
+    "river": "Rhein",
+    "value": 31,
+    "ts": "2026-10-04T05:00:00+02:00",
+    "state": "low",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 35 → 31 cm seit gestern",
+    "placeholder": false
+   },
+   {
     "id": "KAUB",
     "name": "Kaub",
     "river": "Rhein",
@@ -61,31 +72,31 @@
   ]
  },
  "rain": {
-  "updatedAt": "2026-10-04T07:30+02:00",
+  "updatedAt": "2026-10-04T20:17+02:00",
   "placeholder": false,
   "areas": [
    {
     "name": "Alpenrheintal / Vorarlberg",
     "mm": [
      0,
-     4,
+     10,
      0,
      0,
-     22,
-     27,
-     42
+     35,
+     23,
+     5
     ]
    },
    {
     "name": "Schwarzwald, Hochlagen",
     "mm": [
-     1,
-     1,
      0,
      4,
-     30,
-     10,
-     22
+     0,
+     2,
+     26,
+     4,
+     7
     ]
    },
    {
@@ -94,16 +105,16 @@
      0,
      0,
      0,
-     3,
-     11,
-     1,
-     3
+     6,
+     6,
+     4,
+     6
     ]
    }
   ]
  },
  "diesel": {
-  "updatedAt": "2026-10-04T07:30+02:00",
+  "updatedAt": "2026-10-04T20:17+02:00",
   "placeholder": false,
   "estimate": 130.6,
   "low": 123,

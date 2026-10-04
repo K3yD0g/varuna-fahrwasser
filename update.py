@@ -28,6 +28,7 @@ PEGEL = [
     {"id": "MANNHEIM", "name": "Mannheim",  "river": "Rhein"},
     {"id": "WORMS",    "name": "Worms",     "river": "Rhein"},
     {"id": "MAINZ",    "name": "Mainz",     "river": "Rhein"},
+    {"id": "OESTRICH", "name": "Oestrich",  "river": "Rhein"},
     {"id": "KAUB",     "name": "Kaub",      "river": "Rhein"},
 ]
 

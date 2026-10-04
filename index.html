@@ -432,6 +432,14 @@ h1 {
   color: var(--ink-3);
   margin-left: 5px;
 }
+.diesel-trend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.diesel-trend .chip { font-size: 12px; padding: 3px 8px; }
+.diesel-trend .chip.leise { opacity: .8; }
 .diesel-spanne {
   font-family: var(--f-mono);
   font-size: 12px;
@@ -614,8 +622,9 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   };
 
   /* Abladetiefe = Pegelstand plus fester Zuschlag je Pegel, in cm.
-     Maxau minus 160, Mannheim plus 70, Worms plus 160, Mainz plus 30, Kaub plus 120. */
-  var OFFSET_CM = { MAXAU: -160, MANNHEIM: 70, WORMS: 160, MAINZ: 30, KAUB: 120 };
+     Maxau minus 160, Mannheim plus 70, Worms plus 160, Mainz plus 30,
+     Oestrich plus 100, Kaub plus 120. */
+  var OFFSET_CM = { MAXAU: -160, MANNHEIM: 70, WORMS: 160, MAINZ: 30, OESTRICH: 100, KAUB: 120 };
 
   function abladungCm(g) {
     if (g == null || g.value == null) return null;
@@ -793,7 +802,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
        passiert. Der Pegel steht deshalb in der Tabelle, bleibt aber aus der
        Kopfzeile heraus — sonst stünde dort an jedem Niedrigwassertag eine
        Menge, die für die gefahrene Strecke nicht gilt. */
-    var NICHT_IN_KOPFZEILE = { KAUB: true };
+    var NICHT_IN_KOPFZEILE = { OESTRICH: true, KAUB: true };
 
     var abs = items.filter(function (g) { return !NICHT_IN_KOPFZEILE[g.id]; })
                    .map(function (g) { return { name: g.name, cm: abladungCm(g) }; })
@@ -973,6 +982,19 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     return { svg: svg, min: min, max: max };
   }
 
+  function dieselVeraenderung(d, tage) {
+    var h = d.history;
+    if (!h || h.length < 2 || d.estimate == null) return null;
+    var letzter = new Date(h[h.length - 1].d + "T12:00:00");
+    var stichtag = new Date(letzter.getTime() - tage * 86400000).toISOString().slice(0, 10);
+    var basis = null;
+    for (var i = h.length - 1; i >= 0; i--) {
+      if (h[i].d <= stichtag) { basis = h[i]; break; }
+    }
+    if (!basis) return null;           // Verlauf reicht nicht so weit zurück
+    return Math.round((d.estimate - basis.v) * 100) / 100;
+  }
+
   function renderDiesel(d) {
     var host = document.getElementById("diesel");
     var badge = document.getElementById("diesel-badge");
@@ -997,6 +1019,24 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     zahl.appendChild(el("small", null, "€/100 L"));
     links.appendChild(zahl);
     links.appendChild(el("div", "diesel-spanne", "wahrscheinlich " + d.low + " bis " + d.high + " €"));
+
+    /* Richtung: heutiger Schätzwert gegen den Wert vor 7 und vor 30 Tagen
+       (jeweils der letzte Handelstag an oder vor dem Stichtag). */
+    var trends = [7, 30].map(function (tage) {
+      return { tage: tage, diff: dieselVeraenderung(d, tage) };
+    }).filter(function (t) { return t.diff != null; });
+
+    if (trends.length) {
+      var box = el("div", "diesel-trend");
+      trends.forEach(function (t, i) {
+        var richtung = t.diff > 0.5 ? "rising" : t.diff < -0.5 ? "falling" : "";
+        var pfeil = t.diff > 0.5 ? "↑ " : t.diff < -0.5 ? "↓ " : "→ ";
+        var text = pfeil + (t.diff > 0 ? "+" : t.diff < 0 ? "−" : "±") +
+                   euro(Math.abs(t.diff)) + " € in " + t.tage + " Tagen";
+        box.appendChild(el("span", "chip " + richtung + (i ? " leise" : ""), text));
+      });
+      links.appendChild(box);
+    }
     body.appendChild(links);
 
     var rechts = el("div");

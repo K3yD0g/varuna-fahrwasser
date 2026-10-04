@@ -222,13 +222,18 @@ h1 {
 /* ---- gauge rows ---- */
 .gauge {
   display: grid;
-  grid-template-columns: 1fr 104px 112px;
+  grid-template-columns: 1fr 92px 108px 108px;
   gap: 4px 20px;
   align-items: center;
   padding: 16px 22px;
   border-bottom: 1px solid var(--line-soft);
 }
 .gauge:last-child { border-bottom: 0; }
+.gauge.engster {
+  background: var(--panel-2);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+.chip.engster-chip { background: var(--accent); color: var(--panel); }
 .gauge-name {
   font-family: var(--f-display);
   font-weight: 600;
@@ -271,7 +276,7 @@ h1 {
 /* ---- Spaltenköpfe über den Pegelzeilen ---- */
 .gauge-head {
   display: grid;
-  grid-template-columns: 1fr 104px 112px;
+  grid-template-columns: 1fr 92px 108px 108px;
   gap: 20px;
   padding: 10px 22px 8px;
   border-bottom: 1px solid var(--line-soft);
@@ -301,12 +306,22 @@ h1 {
   color: var(--accent);
 }
 .gauge-t {
+  grid-row: 1 / span 2;
+  grid-column: 4;
+  text-align: right;
   font-family: var(--f-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
-  color: var(--ink-2);
-  margin-top: 4px;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
   white-space: nowrap;
+  color: var(--ink);
+}
+.gauge-t small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-left: 3px;
 }
 .gauge-ab-zahl small {
   font-size: 13px;
@@ -511,8 +526,12 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 @media (max-width: 560px) {
   .diesel-body { grid-template-columns: 1fr; padding-inline: 16px; }
   .diesel-zahl { font-size: 32px; }
-  .gauge, .gauge-head { grid-template-columns: 1fr 70px 88px; gap: 4px 10px; }
-  .gauge-val, .gauge-ab-zahl { font-size: 22px; }
+  .gauge, .gauge-head { grid-template-columns: 1fr 54px 64px 66px; gap: 4px 8px; }
+  .gauge-val, .gauge-ab, .gauge-t { grid-row: 1; }
+  .gauge-meta { grid-column: 1 / -1; margin-top: 6px; }
+  .gauge-name span { display: block; margin-left: 0; font-size: 12px; }
+  .gauge-val, .gauge-ab-zahl, .gauge-t { font-size: 18px; }
+  .gauge-val small, .gauge-ab-zahl small, .gauge-t small { font-size: 10px; margin-left: 1px; }
   .gauge-name { font-size: 16px; }
   .gauge-name span { display: block; margin-left: 0; }
   .area, .panel-head, .gauge, .gauge-head { padding-inline: 16px; }
@@ -553,7 +572,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       <p class="note" id="pegel-note"></p>
     </div>
     <div class="gauge-head" aria-hidden="true">
-      <span>Pegelstelle</span><span>Pegel</span><span>Abladetiefe / Ladung</span>
+      <span>Pegelstelle</span><span>Pegel</span><span>Abladetiefe</span><span>Ladung</span>
     </div>
     <div id="gauges"></div>
   </section>
@@ -704,15 +723,31 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 
   /* ---------- gauges ---------- */
 
+  /* Oestrich und Kaub liegen unterhalb von Mainz und werden auf den meisten
+     Fahrten nicht passiert. Sie stehen in der Tabelle, zählen aber nicht für
+     den engsten Wert. */
+  var NICHT_IN_KOPFZEILE = { OESTRICH: true, KAUB: true };
+
+  function engsterPegel(items) {
+    var id = null, best = Infinity;
+    items.forEach(function (g) {
+      if (NICHT_IN_KOPFZEILE[g.id]) return;
+      var c = abladungCm(g);
+      if (c != null && c < best) { best = c; id = g.id; }
+    });
+    return id;
+  }
+
   function renderGauges(data, istLive) {
     var host = document.getElementById("gauges");
     host.textContent = "";
     var items = (data && data.items) || [];
     var anySample = false;
+    var engsterId = engsterPegel(items);
 
     items.forEach(function (g) {
       if (g.placeholder) anySample = true;
-      var row = el("div", "gauge");
+      var row = el("div", "gauge" + (g.id === engsterId ? " engster" : ""));
 
       var name = el("div", "gauge-name", g.name);
       var riv = el("span", null, g.river);
@@ -734,12 +769,21 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         zahl.appendChild(el("small", null, "m"));
       }
       abCell.appendChild(zahl);
-      var t = abCm == null ? null : tonnen(abCm);
-      abCell.appendChild(el("div", "gauge-t", t == null ? "" : fmtT(t) + " t"));
       abCell.title = "Pegel " + g.value + " cm " + offsetLabel(g);
       row.appendChild(abCell);
 
+      var t = abCm == null ? null : tonnen(abCm);
+      var tCell = el("div", "gauge-t");
+      if (t == null) {
+        tCell.textContent = "—";
+      } else {
+        tCell.appendChild(document.createTextNode(fmtT(t)));
+        tCell.appendChild(el("small", null, "t"));
+      }
+      row.appendChild(tCell);
+
       var meta = el("div", "gauge-meta");
+      if (g.id === engsterId) meta.appendChild(el("span", "chip engster-chip", "engster Wert"));
 
       var stateChip = el("span", "chip", STATE_LABEL[g.state] || "Zustand offen");
       meta.appendChild(stateChip);
@@ -797,12 +841,6 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         ? names + " liegen im niedrigen Bereich, kein steigender Trend gegenüber gestern."
         : "Keine Pegeldaten geladen.";
     }
-
-    /* Kaub liegt am Mittelrhein und wird auf den meisten Fahrten gar nicht
-       passiert. Der Pegel steht deshalb in der Tabelle, bleibt aber aus der
-       Kopfzeile heraus — sonst stünde dort an jedem Niedrigwassertag eine
-       Menge, die für die gefahrene Strecke nicht gilt. */
-    var NICHT_IN_KOPFZEILE = { OESTRICH: true, KAUB: true };
 
     var abs = items.filter(function (g) { return !NICHT_IN_KOPFZEILE[g.id]; })
                    .map(function (g) { return { name: g.name, cm: abladungCm(g) }; })

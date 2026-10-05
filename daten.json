@@ -1,6 +1,6 @@
 {
  "gauges": {
-  "updatedAt": "2026-10-05T05:56+02:00",
+  "updatedAt": "2026-10-05T07:10+02:00",
   "placeholder": false,
   "items": [
    {
@@ -72,13 +72,13 @@
   ]
  },
  "rain": {
-  "updatedAt": "2026-10-05T05:56+02:00",
+  "updatedAt": "2026-10-05T07:10+02:00",
   "placeholder": false,
   "areas": [
    {
     "name": "Alpenrheintal / Vorarlberg",
     "mm": [
-     3,
+     2,
      0,
      0,
      46,
@@ -114,14 +114,14 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-10-05T05:56+02:00",
+  "updatedAt": "2026-10-05T07:10+02:00",
   "placeholder": false,
-  "estimate": 132.0,
-  "low": 124,
-  "high": 140,
+  "estimate": 132.9,
+  "low": 125,
+  "high": 141,
   "marketDate": "2026-10-05",
-  "heizoelUsdGal": 4.5089,
-  "eurUsd": 1.1173,
+  "heizoelUsdGal": 4.5431,
+  "eurUsd": 1.1186,
   "history": [
    {
     "d": "2026-08-03",
@@ -301,7 +301,7 @@
    },
    {
     "d": "2026-10-05",
-    "v": 132.0
+    "v": 132.9
    }
   ],
   "model": {

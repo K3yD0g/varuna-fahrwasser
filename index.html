@@ -20,6 +20,8 @@
   --line: #CDD8DF;
   --line-soft: #DFE7EC;
   --accent: #1C6B74;
+  --ladung: #6A3D9A;
+  --ladung-soft: #EFE8F7;
   --signal: #B4641F;
   --signal-soft: #F3E2D2;
   --calm: #2F6E93;
@@ -44,6 +46,8 @@
     --line: #213A48;
     --line-soft: #1A2F3B;
     --accent: #4FA6A8;
+    --ladung: #B99BE6;
+    --ladung-soft: #2A2238;
     --signal: #DE9354;
     --signal-soft: #33241A;
     --calm: #7BAACB;
@@ -64,6 +68,8 @@
   --line: #213A48;
   --line-soft: #1A2F3B;
   --accent: #4FA6A8;
+  --ladung: #B99BE6;
+  --ladung-soft: #2A2238;
   --signal: #DE9354;
   --signal-soft: #33241A;
   --calm: #7BAACB;
@@ -222,9 +228,9 @@ h1 {
 /* ---- gauge rows ---- */
 .gauge {
   display: grid;
-  grid-template-columns: 1fr 92px 108px 108px;
+  grid-template-columns: 1fr 120px 140px;
   gap: 4px 20px;
-  align-items: center;
+  align-items: baseline;
   padding: 16px 22px;
   border-bottom: 1px solid var(--line-soft);
 }
@@ -247,7 +253,9 @@ h1 {
   margin-left: 8px;
 }
 .gauge-meta {
+  grid-row: 2;
   grid-column: 1;
+  align-self: start;
   font-size: 13px;
   color: var(--ink-2);
   display: flex;
@@ -255,13 +263,14 @@ h1 {
   align-items: center;
   flex-wrap: wrap;
 }
+.gauge-name { grid-row: 1; grid-column: 1; }
 .gauge-val {
-  grid-row: 1 / span 2;
+  grid-row: 1;
   grid-column: 2;
   text-align: right;
   font-family: var(--f-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 600;
   line-height: 1.1;
   white-space: nowrap;
@@ -276,7 +285,7 @@ h1 {
 /* ---- Spaltenköpfe über den Pegelzeilen ---- */
 .gauge-head {
   display: grid;
-  grid-template-columns: 1fr 92px 108px 108px;
+  grid-template-columns: 1fr 120px 140px;
   gap: 20px;
   padding: 10px 22px 8px;
   border-bottom: 1px solid var(--line-soft);
@@ -291,37 +300,49 @@ h1 {
   text-align: right;
 }
 .gauge-head span:first-child { text-align: left; }
-.gauge-ab {
-  grid-row: 1 / span 2;
+.gauge-head .kopf-pegel { color: var(--ink); font-weight: 600; }
+.gauge-head .kopf-ablade { color: var(--accent); font-weight: 600; }
+.gauge-head .kopf-ladung { color: var(--ladung); font-weight: 600; }
+.gauge-unter {
+  grid-row: 2;
   grid-column: 3;
+  align-self: start;
   text-align: right;
 }
 .gauge-ab-zahl {
+  grid-row: 1;
+  grid-column: 3;
+  text-align: right;
   font-family: var(--f-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 600;
   line-height: 1.1;
   white-space: nowrap;
   color: var(--accent);
 }
 .gauge-t {
-  grid-row: 1 / span 2;
-  grid-column: 4;
-  text-align: right;
+  margin-top: 5px;
   font-family: var(--f-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 30px;
+  font-size: 21px;
   font-weight: 600;
   line-height: 1.1;
   white-space: nowrap;
-  color: var(--ink);
+  color: var(--ladung);
 }
 .gauge-t small {
   font-size: 13px;
   font-weight: 400;
   color: var(--ink-3);
   margin-left: 3px;
+}
+.gauge-voll {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 3px;
+  white-space: nowrap;
 }
 .gauge-ab-zahl small {
   font-size: 13px;
@@ -526,11 +547,15 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 @media (max-width: 560px) {
   .diesel-body { grid-template-columns: 1fr; padding-inline: 16px; }
   .diesel-zahl { font-size: 32px; }
-  .gauge, .gauge-head { grid-template-columns: 1fr 54px 64px 66px; gap: 4px 8px; }
-  .gauge-val, .gauge-ab, .gauge-t { grid-row: 1; }
-  .gauge-meta { grid-column: 1 / -1; margin-top: 6px; }
+  .gauge, .gauge-head { grid-template-columns: 1fr 70px 92px; gap: 4px 10px; }
+  .gauge-name { grid-row: 1 / span 2; align-self: start; }
+  .gauge-val, .gauge-ab-zahl { grid-row: 1; }
+  .gauge-unter { grid-row: 2; }
+  .gauge-meta { grid-row: 3; grid-column: 1 / -1; margin-top: 6px; }
   .gauge-name span { display: block; margin-left: 0; font-size: 12px; }
-  .gauge-val, .gauge-ab-zahl, .gauge-t { font-size: 18px; }
+  .gauge-val { font-size: 24px; }
+  .gauge-ab-zahl { font-size: 24px; }
+  .gauge-t { font-size: 16px; margin-top: 3px; }
   .gauge-val small, .gauge-ab-zahl small, .gauge-t small { font-size: 10px; margin-left: 1px; }
   .gauge-name { font-size: 16px; }
   .gauge-name span { display: block; margin-left: 0; }
@@ -572,7 +597,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       <p class="note" id="pegel-note"></p>
     </div>
     <div class="gauge-head" aria-hidden="true">
-      <span>Pegelstelle</span><span>Pegel</span><span>Abladetiefe</span><span>Ladung</span>
+      <span>Pegelstelle</span><span class="kopf-pegel">Pegel</span><span><b class="kopf-ablade">Abladetiefe</b> / <b class="kopf-ladung">Ladung</b></span>
     </div>
     <div id="gauges"></div>
   </section>
@@ -662,6 +687,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
      Zwischenwerte treffen die Tabelle des Eichscheins deshalb exakt.
      Leerebene bei 89,3 cm, größte Eintauchung 330 cm = 2143,033 t. */
   var LEEREBENE_CM = 89.3;
+  var GROESSTE_EINTAUCHUNG_CM = 330;   // Eichschein: tiefer geht die Varuna nicht
   var EICHSKALA = [
     [90, 5.983], [100, 91.573], [110, 177.413], [120, 263.543], [130, 349.953],
     [140, 436.663], [150, 523.693], [160, 611.033], [170, 698.693], [180, 786.653],
@@ -759,18 +785,17 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       val.appendChild(el("small", null, "cm"));
       row.appendChild(val);
 
-      var abCell = el("div", "gauge-ab");
       var abCm = abladungCm(g);
       var zahl = el("div", "gauge-ab-zahl");
       if (abCm == null) {
         zahl.textContent = "—";
       } else {
-        zahl.appendChild(document.createTextNode(fmtM(abCm)));
+        zahl.appendChild(document.createTextNode(fmtM(Math.min(abCm, GROESSTE_EINTAUCHUNG_CM))));
         zahl.appendChild(el("small", null, "m"));
       }
-      abCell.appendChild(zahl);
-      abCell.title = "Pegel " + g.value + " cm " + offsetLabel(g);
-      row.appendChild(abCell);
+      zahl.title = "Pegel " + g.value + " cm " + offsetLabel(g);
+      row.appendChild(zahl);
+      var unter = el("div", "gauge-unter");
 
       var t = abCm == null ? null : tonnen(abCm);
       var tCell = el("div", "gauge-t");
@@ -780,7 +805,12 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         tCell.appendChild(document.createTextNode(fmtT(t)));
         tCell.appendChild(el("small", null, "t"));
       }
-      row.appendChild(tCell);
+      unter.appendChild(tCell);
+
+      if (abCm != null && abCm >= GROESSTE_EINTAUCHUNG_CM) {
+        unter.appendChild(el("div", "gauge-voll", "voll abgeladen"));
+      }
+      row.appendChild(unter);
 
       var meta = el("div", "gauge-meta");
       if (g.id === engsterId) meta.appendChild(el("span", "chip engster-chip", "engster Wert"));
@@ -850,8 +880,11 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     var min = abs.reduce(function (m, a) { return a.cm < m.cm ? a : m; });
     var ausgenommen = items.filter(function (g) { return NICHT_IN_KOPFZEILE[g.id]; })
                            .map(function (g) { return g.name; });
-    abEl.textContent = "Engster Wert: " + fmtM(min.cm) + " m bei " + min.name +
-      " — das sind " + fmtT(tonnen(min.cm)) + " t Ladung" +
+    var voll = min.cm >= GROESSTE_EINTAUCHUNG_CM;
+    abEl.textContent = (voll
+        ? "Überall voll abladen: " + fmtM(GROESSTE_EINTAUCHUNG_CM) + " m — " + fmtT(tonnen(min.cm)) + " t Ladung"
+        : "Engster Wert: " + fmtM(min.cm) + " m bei " + min.name +
+          " — das sind " + fmtT(tonnen(min.cm)) + " t Ladung") +
       (ausgenommen.length ? " (ohne " + ausgenommen.join(", ") + ")" : "");
   }
 

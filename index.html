@@ -124,36 +124,60 @@ h1 {
   max-width: 62ch;
 }
 
-/* ---- verdict ---- */
+/* ---- verdict: engster Pegel ---- */
 .verdict {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  padding: 20px 22px;
+  padding: 16px 22px 18px;
   border-radius: 3px;
   background: var(--calm-soft);
   border-left: 4px solid var(--calm);
 }
-.verdict.rise {
-  background: var(--signal-soft);
-  border-left-color: var(--signal);
-}
-.verdict-mark {
+.verdict-zeit {
+  margin: 0 0 10px;
   font-family: var(--f-mono);
-  font-size: 22px;
-  line-height: 1.2;
-  color: var(--calm);
-  flex: none;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
 }
-.verdict.rise .verdict-mark { color: var(--signal); }
-.verdict h2 {
+.verdict-zeit b { color: var(--ink); font-weight: 600; }
+.verdict-zeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 36px;
+}
+.verdict-feld { display: flex; flex-direction: column; gap: 2px; }
+.verdict-feld-name { flex: 1 1 auto; min-width: 140px; }
+.verdict-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.verdict-name {
   font-family: var(--f-display);
   font-weight: 600;
-  font-size: 21px;
-  margin: 0 0 4px;
-  line-height: 1.2;
+  font-size: 26px;
+  line-height: 1.15;
 }
-.verdict p { margin: 0; color: var(--ink-2); font-size: 15px; }
+.verdict-zahl {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.verdict-zahl small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-left: 3px;
+}
+.v-pegel { color: var(--ink); }
+.v-tief { color: var(--accent); }
+.v-ladung { color: var(--ladung); }
 
 /* ---- panels ---- */
 .panel {
@@ -350,13 +374,6 @@ h1 {
   color: var(--ink-3);
   margin-left: 3px;
 }
-.verdict-ab {
-  margin: 8px 0 0;
-  font-family: var(--f-mono);
-  font-size: 13px;
-  color: var(--ink-2);
-  font-variant-numeric: tabular-nums;
-}
 .chip {
   font-family: var(--f-mono);
   font-size: 11px;
@@ -549,6 +566,11 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   .diesel-zahl { font-size: 32px; }
   .gauge, .gauge-head { grid-template-columns: 1fr 70px 92px; gap: 4px 10px; }
   .gauge-name { grid-row: 1 / span 2; align-self: start; }
+  .verdict { padding: 14px 16px 16px; }
+  .verdict-zeile { gap: 8px 20px; }
+  .verdict-feld-name { flex-basis: 100%; }
+  .verdict-name { font-size: 22px; }
+  .verdict-zahl { font-size: 24px; }
   .gauge-val, .gauge-ab-zahl { grid-row: 1; }
   .gauge-unter { grid-row: 2; }
   .gauge-meta { grid-row: 3; grid-column: 1 / -1; margin-top: 6px; }
@@ -578,11 +600,24 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   </header>
 
   <section class="verdict" id="verdict" aria-live="polite">
-    <div class="verdict-mark" id="verdict-mark">&#8595;</div>
-    <div>
-      <h2 id="verdict-title">Lade&hellip;</h2>
-      <p id="verdict-body"></p>
-      <p class="verdict-ab" id="verdict-ab"></p>
+    <p class="verdict-zeit" id="verdict-zeit">Lade&hellip;</p>
+    <div class="verdict-zeile">
+      <div class="verdict-feld verdict-feld-name">
+        <span class="verdict-label">Engster Pegel</span>
+        <b class="verdict-name" id="verdict-name">&ndash;</b>
+      </div>
+      <div class="verdict-feld">
+        <span class="verdict-label">Pegel</span>
+        <b class="verdict-zahl v-pegel" id="verdict-pegel">&ndash;</b>
+      </div>
+      <div class="verdict-feld">
+        <span class="verdict-label" id="verdict-tief-label">Tiefgang</span>
+        <b class="verdict-zahl v-tief" id="verdict-tief">&ndash;</b>
+      </div>
+      <div class="verdict-feld">
+        <span class="verdict-label">Ladung</span>
+        <b class="verdict-zahl v-ladung" id="verdict-t">&ndash;</b>
+      </div>
     </div>
   </section>
 
@@ -591,8 +626,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       <h3 id="h-pegel">Pegel</h3>
       <span class="badge live" id="pegel-badge">Live</span>
       <div class="umschalter" role="group" aria-label="Welche Pegelwerte anzeigen">
-        <button type="button" id="btn-5uhr" aria-pressed="true">5-Uhr-Wert</button>
-        <button type="button" id="btn-aktuell" aria-pressed="false">Aktuell</button>
+        <button type="button" id="btn-5uhr" aria-pressed="false">5-Uhr-Wert</button>
+        <button type="button" id="btn-aktuell" aria-pressed="true">Aktuell</button>
       </div>
       <p class="note" id="pegel-note"></p>
     </div>
@@ -845,47 +880,40 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       "Abladetiefe = Pegel " +
       items.map(function (g) { return g.name + " " + offsetLabel(g); }).join(" · ");
 
-    renderVerdict(items);
+    renderVerdict(items, istLive);
   }
 
-  function renderVerdict(items) {
-    var rising = items.filter(function (g) { return g.trend === "rising"; });
-    var box = document.getElementById("verdict");
-    var mark = document.getElementById("verdict-mark");
-    var title = document.getElementById("verdict-title");
-    var body = document.getElementById("verdict-body");
+  function wertSetzen(id, text, einheit) {
+    var e = document.getElementById(id);
+    e.textContent = text;
+    if (einheit) e.appendChild(el("small", null, einheit));
+  }
 
-    if (rising.length) {
-      box.classList.add("rise");
-      mark.textContent = "↑";
-      title.textContent = "Anstieg gemeldet";
-      body.textContent = rising.map(function (g) {
-        return g.name + ": " + g.value + " cm, " + (g.trendNote || "steigend");
-      }).join(" · ");
-    } else {
-      box.classList.remove("rise");
-      mark.textContent = "↓";
-      title.textContent = "Kein Anstieg in Sicht";
-      var names = items.map(function (g) { return g.name; }).join(", ");
-      body.textContent = names
-        ? names + " liegen im niedrigen Bereich, kein steigender Trend gegenüber gestern."
-        : "Keine Pegeldaten geladen.";
+  /* Kopfbox: nur der engste Ladepegel (ohne Oestrich und Kaub) und
+     von wann die angezeigten Werte sind. */
+  function renderVerdict(items, istLive) {
+    var zeit = document.getElementById("verdict-zeit");
+    var engId = engsterPegel(items);
+    var g = null;
+    items.forEach(function (x) { if (x.id === engId) g = x; });
+
+    zeit.textContent = "";
+    zeit.appendChild(el("b", null, istLive ? "Aktuell" : "5-Uhr-Wert"));
+    zeit.appendChild(document.createTextNode(g && g.ts ? " · " + fmtDateTime(g.ts) : ""));
+
+    if (!g) {
+      ["verdict-name", "verdict-pegel", "verdict-tief", "verdict-t"].forEach(function (id) {
+        wertSetzen(id, "–");
+      });
+      return;
     }
-
-    var abs = items.filter(function (g) { return !NICHT_IN_KOPFZEILE[g.id]; })
-                   .map(function (g) { return { name: g.name, cm: abladungCm(g) }; })
-                   .filter(function (a) { return a.cm != null; });
-    var abEl = document.getElementById("verdict-ab");
-    if (!abs.length) { abEl.textContent = ""; return; }
-    var min = abs.reduce(function (m, a) { return a.cm < m.cm ? a : m; });
-    var ausgenommen = items.filter(function (g) { return NICHT_IN_KOPFZEILE[g.id]; })
-                           .map(function (g) { return g.name; });
-    var voll = min.cm >= GROESSTE_EINTAUCHUNG_CM;
-    abEl.textContent = (voll
-        ? "Überall voll abladen: " + fmtM(GROESSTE_EINTAUCHUNG_CM) + " m — " + fmtT(tonnen(min.cm)) + " t Ladung"
-        : "Engster Wert: " + fmtM(min.cm) + " m bei " + min.name +
-          " — das sind " + fmtT(tonnen(min.cm)) + " t Ladung") +
-      (ausgenommen.length ? " (ohne " + ausgenommen.join(", ") + ")" : "");
+    var cm = abladungCm(g);
+    var voll = cm >= GROESSTE_EINTAUCHUNG_CM;
+    wertSetzen("verdict-name", g.name);
+    wertSetzen("verdict-pegel", String(g.value), "cm");
+    wertSetzen("verdict-tief", fmtM(Math.min(cm, GROESSTE_EINTAUCHUNG_CM)), "m");
+    wertSetzen("verdict-t", fmtT(tonnen(cm)), "t");
+    document.getElementById("verdict-tief-label").textContent = voll ? "Tiefgang · voll" : "Tiefgang";
   }
 
   /* ---------- rain ---------- */
@@ -895,15 +923,29 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     host.textContent = "";
     var areas = (data && data.areas) || [];
 
+    /* mm[0] ist der Tag, an dem die Prognose geholt wurde. Ist der Stand
+       älter als heute, werden die vergangenen Tage weggelassen, damit die
+       Balken immer bei heute beginnen. */
+    var heute0 = new Date(); heute0.setHours(0, 0, 0, 0);
+    var versatz = 0;
+    if (data && data.updatedAt) {
+      var b = new Date(data.updatedAt);
+      var basis0 = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+      versatz = Math.max(0, Math.round((heute0 - basis0) / 86400000));
+    }
+    areas = areas.map(function (a) {
+      return { name: a.name, mm: (a.mm || []).slice(versatz) };
+    });
+    var anzahlTage = Math.max(0, 7 - versatz);
+
     var max = 1;
     areas.forEach(function (a) {
       (a.mm || []).forEach(function (v) { if (v > max) max = v; });
     });
 
-    var today = new Date();
     var labels = [];
-    for (var i = 0; i < 7; i++) {
-      var d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    for (var i = 0; i < anzahlTage; i++) {
+      var d = new Date(heute0.getFullYear(), heute0.getMonth(), heute0.getDate() + i);
       labels.push({
         short: DAYS[d.getDay()],
         full: DAYS[d.getDay()] + " " + String(d.getDate()).padStart(2, "0") + "." + String(d.getMonth() + 1).padStart(2, "0") + ".",
@@ -917,7 +959,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       var head = el("div", "area-head");
       head.appendChild(el("div", "area-name", a.name));
       var sum = (a.mm || []).reduce(function (s, v) { return s + v; }, 0);
-      head.appendChild(el("div", "area-sum", "7 Tage: " + Math.round(sum) + " mm"));
+      head.appendChild(el("div", "area-sum", labels.length + " Tage: " + Math.round(sum) + " mm"));
       wrapEl.appendChild(head);
 
       var peakIdx = 0;
@@ -981,10 +1023,12 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   }
 
   /* Holt bei jedem Druck frisch – auch wenn schon Momentanwerte angezeigt werden. */
+  var ABRUF_LAEUFT = false;
   async function aktuellAbrufen() {
     var btn = document.getElementById("btn-aktuell");
-    if (!TAGESSTAND || !TAGESSTAND.items) return;
+    if (!TAGESSTAND || !TAGESSTAND.items || ABRUF_LAEUFT) return;
 
+    ABRUF_LAEUFT = true;
     btn.disabled = true;
     btn.textContent = "Wird geholt …";
 
@@ -1015,6 +1059,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       document.getElementById("pegel-note").textContent =
         "Abruf fehlgeschlagen – PEGELONLINE antwortet gerade nicht. Angezeigt bleibt der 5-Uhr-Stand.";
     } finally {
+      ABRUF_LAEUFT = false;
       btn.disabled = false;
       btn.textContent = "Aktuell";
       knoepfeSetzen();
@@ -1162,7 +1207,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   renderDiesel(SNAPSHOT.diesel);
   renderFooter(SNAPSHOT.gauges.updatedAt, false);
 
-  (async function () {
+  async function datenLaden() {
     try {
       var res = await fetch("daten.json?t=" + Date.now(), { cache: "no-store" });
       if (!res.ok) return;
@@ -1177,7 +1222,30 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     } catch (e) {
       /* Der beim Veroeffentlichen eingebaute Stand bleibt stehen. */
     }
-  })();
+  }
+
+  /* Beim Öffnen und Neuladen: Tagesdaten holen, dann gleich die
+     Momentanwerte. Der 5-Uhr-Stand kommt nur auf Knopfdruck. */
+  async function allesAktualisieren() {
+    await datenLaden();
+    await aktuellAbrufen();
+  }
+  allesAktualisieren();
+
+  /* Wer die Seite offen lässt (Handy, Safari-Tab) und später wieder
+     hinschaut, bekommt ebenfalls den frischen Stand. */
+  var verstecktSeit = null;
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      verstecktSeit = Date.now();
+    } else if (verstecktSeit && Date.now() - verstecktSeit > 60 * 1000) {
+      verstecktSeit = null;
+      allesAktualisieren();
+    }
+  });
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) allesAktualisieren();
+  });
 
 })();
 </script>

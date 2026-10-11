@@ -1,120 +1,120 @@
 {
  "gauges": {
-  "updatedAt": "2026-10-10T06:52+02:00",
+  "updatedAt": "2026-10-11T05:52+02:00",
   "placeholder": false,
   "items": [
    {
     "id": "MAXAU",
     "name": "Maxau",
     "river": "Rhein",
-    "value": 306,
-    "ts": "2026-10-10T05:00:00+02:00",
+    "value": 307,
+    "ts": "2026-10-11T05:00:00+02:00",
     "state": "low",
     "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 297 → 306 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 306 → 307 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MANNHEIM",
     "name": "Mannheim",
     "river": "Rhein",
-    "value": 66,
-    "ts": "2026-10-10T05:00:00+02:00",
+    "value": 74,
+    "ts": "2026-10-11T05:00:00+02:00",
     "state": "low",
     "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 55 → 66 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 66 → 74 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "WORMS",
     "name": "Worms",
     "river": "Rhein",
-    "value": -15,
-    "ts": "2026-10-10T05:00:00+02:00",
+    "value": -10,
+    "ts": "2026-10-11T05:00:00+02:00",
     "state": "low",
     "trend": "rising",
-    "trendNote": "5-Uhr-Werte: -23 → -15 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: -15 → -10 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MAINZ",
     "name": "Mainz",
     "river": "Rhein",
-    "value": 108,
-    "ts": "2026-10-10T05:00:00+02:00",
+    "value": 113,
+    "ts": "2026-10-11T05:00:00+02:00",
     "state": "low",
-    "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 112 → 108 cm seit gestern",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: 108 → 113 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "OESTRICH",
     "name": "Oestrich",
     "river": "Rhein",
-    "value": 32,
-    "ts": "2026-10-10T05:00:00+02:00",
+    "value": 39,
+    "ts": "2026-10-11T05:00:00+02:00",
     "state": "low",
-    "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 33 → 32 cm seit gestern",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: 32 → 39 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "KAUB",
     "name": "Kaub",
     "river": "Rhein",
-    "value": 6,
-    "ts": "2026-10-10T05:00:00+02:00",
+    "value": 16,
+    "ts": "2026-10-11T05:00:00+02:00",
     "state": "low",
     "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 4 → 6 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 6 → 16 cm seit gestern",
     "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-10-10T06:53+02:00",
+  "updatedAt": "2026-10-11T05:52+02:00",
   "placeholder": false,
   "areas": [
    {
     "name": "Alpenrheintal / Vorarlberg",
     "mm": [
-     14,
+     1,
+     0,
+     2,
      0,
      0,
      0,
-     0,
-     0,
-     0
+     2
     ]
    },
    {
     "name": "Schwarzwald, Hochlagen",
     "mm": [
-     11,
      0,
      0,
      0,
+     1,
      0,
      0,
-     0
+     7
     ]
    },
    {
     "name": "Oberrhein / Pfalz",
     "mm": [
-     1,
      0,
      0,
      0,
      2,
      0,
-     0
+     0,
+     7
     ]
    }
   ]
  },
  "diesel": {
-  "updatedAt": "2026-10-10T06:53+02:00",
+  "updatedAt": "2026-10-11T05:52+02:00",
   "placeholder": false,
   "estimate": 138.8,
   "low": 131,

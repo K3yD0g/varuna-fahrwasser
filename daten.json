@@ -1,6 +1,6 @@
 {
  "gauges": {
-  "updatedAt": "2026-10-26T10:19+01:00",
+  "updatedAt": "2026-10-26T13:38+01:00",
   "placeholder": false,
   "items": [
    {
@@ -12,6 +12,17 @@
     "state": "low",
     "trend": "rising",
     "trendNote": "5-Uhr-Werte: 299 → 340 cm seit gestern",
+    "placeholder": false
+   },
+   {
+    "id": "SPEYER",
+    "name": "Speyer",
+    "river": "Rhein",
+    "value": 179,
+    "ts": "2026-10-26T05:00:00+01:00",
+    "state": "low",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: 169 → 179 cm seit gestern",
     "placeholder": false
    },
    {
@@ -72,7 +83,7 @@
   ]
  },
  "rain": {
-  "updatedAt": "2026-10-26T10:19+01:00",
+  "updatedAt": "2026-10-26T13:38+01:00",
   "placeholder": false,
   "areas": [
    {
@@ -114,14 +125,14 @@
   ]
  },
  "diesel": {
-  "updatedAt": "2026-10-26T10:19+01:00",
+  "updatedAt": "2026-10-26T13:38+01:00",
   "placeholder": false,
-  "estimate": 139.1,
-  "low": 131,
-  "high": 147,
+  "estimate": 141.0,
+  "low": 133,
+  "high": 149,
   "marketDate": "2026-10-26",
-  "heizoelUsdGal": 4.7512,
-  "eurUsd": 1.1217,
+  "heizoelUsdGal": 4.8035,
+  "eurUsd": 1.1199,
   "history": [
    {
     "d": "2026-08-24",
@@ -301,7 +312,7 @@
    },
    {
     "d": "2026-10-26",
-    "v": 139.1
+    "v": 141.0
    }
   ],
   "model": {

@@ -1224,10 +1224,65 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     }
   }
 
-  /* Beim Öffnen und Neuladen: Tagesdaten holen, dann gleich die
-     Momentanwerte. Der 5-Uhr-Stand kommt nur auf Knopfdruck. */
+  /* 5-Uhr-Werte direkt bei PEGELONLINE holen, damit sie nicht auf den
+     (oft stundenlang verspäteten) GitHub-Lauf warten. Gleiche Regeln wie
+     update.py: der 05:00-Wert deutscher Zeit von heute, verglichen mit dem
+     von gestern; vor 5 Uhr gilt noch der von gestern. */
+  function datumBerlin(d) {
+    return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin",
+      year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+  }
+  function cmRunden(v) { return Math.floor(Number(v) + 0.5); }
+
+  async function fuenfUhrHolen() {
+    if (!TAGESSTAND || !TAGESSTAND.items || !TAGESSTAND.items.length) return;
+    var heute = datumBerlin(new Date());
+    var gestern = datumBerlin(new Date(Date.now() - 86400000));
+    try {
+      var items = await Promise.all(TAGESSTAND.items.map(async function (g) {
+        var r = await fetch(PEGELONLINE + encodeURIComponent(g.id) +
+          "/W/measurements.json?start=P2D", { cache: "no-store" });
+        if (!r.ok) throw new Error(g.name + ": HTTP " + r.status);
+        var reihe = await r.json();
+        var treffer = {};
+        reihe.forEach(function (m) {
+          var t = m.timestamp || "";
+          /* PEGELONLINE liefert deutsche Ortszeit mit Versatz, z. B. 2026-11-09T05:00:00+01:00 */
+          if (t.slice(11, 16) === "05:00") treffer[t.slice(0, 10)] = m;
+        });
+        var h = treffer[heute], v = treffer[gestern];
+        var neu = {
+          id: g.id, name: g.name, river: g.river,
+          value: null, ts: null, state: g.state,
+          trend: "unknown", trendNote: "", placeholder: false
+        };
+        var basis = h || v;
+        if (!basis) return g;   // nichts gefunden: alten Eintrag behalten
+        neu.value = cmRunden(basis.value);
+        neu.ts = basis.timestamp;
+        if (h && v) {
+          var a = cmRunden(h.value), b = cmRunden(v.value);
+          neu.trend = a > b ? "rising" : a < b ? "falling" : "steady";
+          neu.trendNote = "5-Uhr-Werte: " + b + " → " + a + " cm seit gestern";
+        } else if (!h) {
+          neu.trendNote = "heutiger 5-Uhr-Wert fehlt noch";
+        }
+        return neu;
+      }));
+      TAGESSTAND = { updatedAt: new Date().toISOString(), placeholder: false, items: items };
+      if (!LIVE) renderGauges(TAGESSTAND, false);
+    } catch (e) {
+      console.error("5-Uhr-Abruf fehlgeschlagen:", e);
+      /* Dann bleibt der Stand aus daten.json stehen. */
+    }
+  }
+
+  /* Beim Öffnen und Neuladen: Tagesdaten holen, die 5-Uhr-Werte direkt
+     nachziehen, dann gleich die Momentanwerte. Der 5-Uhr-Stand wird nur
+     auf Knopfdruck angezeigt. */
   async function allesAktualisieren() {
     await datenLaden();
+    await fuenfUhrHolen();
     await aktuellAbrufen();
   }
   allesAktualisieren();

@@ -1,89 +1,89 @@
 {
  "gauges": {
-  "updatedAt": "2026-11-13T12:29+01:00",
+  "updatedAt": "2026-11-14T11:52+01:00",
   "placeholder": false,
   "items": [
    {
     "id": "MAXAU",
     "name": "Maxau",
     "river": "Rhein",
-    "value": 348,
-    "ts": "2026-11-13T05:00:00+01:00",
-    "state": "low",
-    "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 373 → 348 cm seit gestern",
+    "value": 376,
+    "ts": "2026-11-14T05:00:00+01:00",
+    "state": "normal",
+    "trend": "rising",
+    "trendNote": "5-Uhr-Werte: 348 → 376 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "SPEYER",
     "name": "Speyer",
     "river": "Rhein",
-    "value": 234,
-    "ts": "2026-11-13T05:00:00+01:00",
+    "value": 213,
+    "ts": "2026-11-14T05:00:00+01:00",
     "state": "normal",
-    "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 233 → 234 cm seit gestern",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 234 → 213 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MANNHEIM",
     "name": "Mannheim",
     "river": "Rhein",
-    "value": 144,
-    "ts": "2026-11-13T05:00:00+01:00",
-    "state": "normal",
-    "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 136 → 144 cm seit gestern",
+    "value": 125,
+    "ts": "2026-11-14T05:00:00+01:00",
+    "state": "low",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 144 → 125 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "WORMS",
     "name": "Worms",
     "river": "Rhein",
-    "value": 56,
-    "ts": "2026-11-13T05:00:00+01:00",
-    "state": "normal",
-    "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 45 → 56 cm seit gestern",
+    "value": 44,
+    "ts": "2026-11-14T05:00:00+01:00",
+    "state": "low",
+    "trend": "falling",
+    "trendNote": "5-Uhr-Werte: 56 → 44 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MAINZ",
     "name": "Mainz",
     "river": "Rhein",
-    "value": 166,
-    "ts": "2026-11-13T05:00:00+01:00",
+    "value": 167,
+    "ts": "2026-11-14T05:00:00+01:00",
     "state": "normal",
     "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 142 → 166 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 166 → 167 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "OESTRICH",
     "name": "Oestrich",
     "river": "Rhein",
-    "value": 81,
-    "ts": "2026-11-13T05:00:00+01:00",
+    "value": 84,
+    "ts": "2026-11-14T05:00:00+01:00",
     "state": "normal",
     "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 56 → 81 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 81 → 84 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "KAUB",
     "name": "Kaub",
     "river": "Rhein",
-    "value": 63,
-    "ts": "2026-11-13T05:00:00+01:00",
+    "value": 73,
+    "ts": "2026-11-14T05:00:00+01:00",
     "state": "normal",
     "trend": "rising",
-    "trendNote": "5-Uhr-Werte: 32 → 63 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 63 → 73 cm seit gestern",
     "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-11-13T12:29+01:00",
+  "updatedAt": "2026-11-14T11:52+01:00",
   "placeholder": false,
   "areas": [
    {
@@ -91,48 +91,48 @@
     "mm": [
      0,
      0,
-     0,
-     4,
-     14,
-     34,
-     27
+     13,
+     15,
+     18,
+     15,
+     12
     ]
    },
    {
     "name": "Schwarzwald, Hochlagen",
     "mm": [
      0,
-     0,
-     10,
-     18,
-     38,
-     20,
-     9
+     6,
+     19,
+     28,
+     29,
+     17,
+     23
     ]
    },
    {
     "name": "Oberrhein / Pfalz",
     "mm": [
      0,
-     0,
-     6,
-     6,
-     20,
-     6,
-     4
+     3,
+     3,
+     17,
+     8,
+     14,
+     7
     ]
    }
   ]
  },
  "diesel": {
-  "updatedAt": "2026-11-13T12:29+01:00",
+  "updatedAt": "2026-11-14T11:52+01:00",
   "placeholder": false,
-  "estimate": 126.7,
-  "low": 119,
-  "high": 134,
+  "estimate": 125.5,
+  "low": 118,
+  "high": 133,
   "marketDate": "2026-11-13",
-  "heizoelUsdGal": 4.2997,
-  "eurUsd": 1.1057,
+  "heizoelUsdGal": 4.2585,
+  "eurUsd": 1.105,
   "history": [
    {
     "d": "2026-09-14",
@@ -312,7 +312,7 @@
    },
    {
     "d": "2026-11-13",
-    "v": 126.7
+    "v": 125.5
    }
   ],
   "model": {

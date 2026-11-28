@@ -1,89 +1,89 @@
 {
  "gauges": {
-  "updatedAt": "2026-11-27T14:03+01:00",
+  "updatedAt": "2026-11-28T13:16+01:00",
   "placeholder": false,
   "items": [
    {
     "id": "MAXAU",
     "name": "Maxau",
     "river": "Rhein",
-    "value": 492,
-    "ts": "2026-11-27T05:00:00+01:00",
+    "value": 461,
+    "ts": "2026-11-28T05:00:00+01:00",
     "state": "normal",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 501 → 492 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 492 → 461 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "SPEYER",
     "name": "Speyer",
     "river": "Rhein",
-    "value": 351,
-    "ts": "2026-11-27T05:00:00+01:00",
+    "value": 331,
+    "ts": "2026-11-28T05:00:00+01:00",
     "state": "normal",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 377 → 351 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 351 → 331 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MANNHEIM",
     "name": "Mannheim",
     "river": "Rhein",
-    "value": 272,
-    "ts": "2026-11-27T05:00:00+01:00",
+    "value": 253,
+    "ts": "2026-11-28T05:00:00+01:00",
     "state": "normal",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 308 → 272 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 272 → 253 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "WORMS",
     "name": "Worms",
     "river": "Rhein",
-    "value": 176,
-    "ts": "2026-11-27T05:00:00+01:00",
+    "value": 159,
+    "ts": "2026-11-28T05:00:00+01:00",
     "state": "normal",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 212 → 176 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 176 → 159 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "MAINZ",
     "name": "Mainz",
     "river": "Rhein",
-    "value": 284,
-    "ts": "2026-11-27T05:00:00+01:00",
+    "value": 268,
+    "ts": "2026-11-28T05:00:00+01:00",
     "state": "normal",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 313 → 284 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 284 → 268 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "OESTRICH",
     "name": "Oestrich",
     "river": "Rhein",
-    "value": 182,
-    "ts": "2026-11-27T05:00:00+01:00",
+    "value": 168,
+    "ts": "2026-11-28T05:00:00+01:00",
     "state": "normal",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 205 → 182 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 182 → 168 cm seit gestern",
     "placeholder": false
    },
    {
     "id": "KAUB",
     "name": "Kaub",
     "river": "Rhein",
-    "value": 204,
-    "ts": "2026-11-27T05:00:00+01:00",
+    "value": 182,
+    "ts": "2026-11-28T05:00:00+01:00",
     "state": "normal",
     "trend": "falling",
-    "trendNote": "5-Uhr-Werte: 235 → 204 cm seit gestern",
+    "trendNote": "5-Uhr-Werte: 204 → 182 cm seit gestern",
     "placeholder": false
    }
   ]
  },
  "rain": {
-  "updatedAt": "2026-11-27T14:03+01:00",
+  "updatedAt": "2026-11-28T13:16+01:00",
   "placeholder": false,
   "areas": [
    {
@@ -91,23 +91,23 @@
     "mm": [
      0,
      0,
+     3,
      0,
-     4,
      0,
-     0,
-     1
+     8,
+     0
     ]
    },
    {
     "name": "Schwarzwald, Hochlagen",
     "mm": [
      0,
+     2,
+     0,
+     0,
      0,
      3,
-     1,
-     0,
-     0,
-     1
+     0
     ]
    },
    {
@@ -115,24 +115,24 @@
     "mm": [
      0,
      0,
+     0,
+     0,
+     1,
      4,
-     0,
-     0,
-     0,
-     2
+     0
     ]
    }
   ]
  },
  "diesel": {
-  "updatedAt": "2026-11-27T14:03+01:00",
+  "updatedAt": "2026-11-28T13:16+01:00",
   "placeholder": false,
-  "estimate": 107.3,
-  "low": 100,
-  "high": 115,
+  "estimate": 108.8,
+  "low": 101,
+  "high": 116,
   "marketDate": "2026-11-27",
-  "heizoelUsdGal": 3.6644,
-  "eurUsd": 1.0965,
+  "heizoelUsdGal": 3.7145,
+  "eurUsd": 1.0972,
   "history": [
    {
     "d": "2026-09-25",
@@ -312,7 +312,7 @@
    },
    {
     "d": "2026-11-27",
-    "v": 107.3
+    "v": 108.8
    }
   ],
   "model": {

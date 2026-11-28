@@ -22,6 +22,10 @@
   --accent: #1C6B74;
   --ladung: #6A3D9A;
   --ladung-soft: #EFE8F7;
+  --kw-nw: #C62828;
+  --kw-mw: #1A8A3C;
+  --kw-hsw: #1565C0;
+  --sl: #5E7A00;
   --signal: #B4641F;
   --signal-soft: #F3E2D2;
   --calm: #2F6E93;
@@ -48,6 +52,10 @@
     --accent: #4FA6A8;
     --ladung: #B99BE6;
     --ladung-soft: #2A2238;
+    --kw-nw: #FF8A80;
+    --kw-mw: #6FD08C;
+    --kw-hsw: #7FB5FF;
+    --sl: #B5CC4B;
     --signal: #DE9354;
     --signal-soft: #33241A;
     --calm: #7BAACB;
@@ -70,6 +78,10 @@
   --accent: #4FA6A8;
   --ladung: #B99BE6;
   --ladung-soft: #2A2238;
+  --kw-nw: #FF8A80;
+  --kw-mw: #6FD08C;
+  --kw-hsw: #7FB5FF;
+  --sl: #B5CC4B;
   --signal: #DE9354;
   --signal-soft: #33241A;
   --calm: #7BAACB;
@@ -247,6 +259,22 @@ h1 {
 .umschalter button:hover:not(:disabled):not([aria-pressed="true"]) { background: var(--calm-soft); }
 .umschalter button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .umschalter button:disabled { opacity: .55; cursor: default; }
+.umschalter.fluss { margin-left: 0; align-self: center; }
+.kennwerte {
+  flex-basis: 100%;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+}
+.kw-nw { color: var(--kw-nw); }
+.kw-mw { color: var(--kw-mw); }
+.kw-hsw { color: var(--kw-hsw); }
+.panel-head .note.legende { font-family: var(--f-mono); font-size: 11px; padding-top: 0; }
+.panel-head .note.legende span + span::before { content: " · "; color: var(--ink-3); }
 .badge.sample { color: var(--signal); background: var(--signal-soft); border-color: transparent; }
 
 /* ---- gauge rows ---- */
@@ -368,6 +396,22 @@ h1 {
   margin-top: 3px;
   white-space: nowrap;
 }
+/* Schubleichter (SL): Tonnen unter der Ladung der Varuna */
+.gauge-sl {
+  margin-top: 4px;
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  color: var(--sl);
+}
+.gauge-sl small { font-size: 13px; font-weight: 400; color: var(--ink-3); margin-left: 3px; }
+.gauge-sl .sl-marke { font-size: 12px; font-weight: 600; letter-spacing: .06em; margin-right: 6px; color: var(--sl); margin-left: 0; }
+.gauge-voll.sl { color: var(--sl); }
+.gauge-head .kopf-sl { color: var(--sl); font-weight: 600; }
+.v-sl { color: var(--sl); }
 .gauge-ab-zahl small {
   font-size: 13px;
   font-weight: 400;
@@ -578,7 +622,9 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   .gauge-val { font-size: 24px; }
   .gauge-ab-zahl { font-size: 24px; }
   .gauge-t { font-size: 16px; margin-top: 3px; }
-  .gauge-val small, .gauge-ab-zahl small, .gauge-t small { font-size: 10px; margin-left: 1px; }
+  .gauge-sl { font-size: 16px; margin-top: 3px; }
+  .gauge-sl .sl-marke { font-size: 10px; margin-right: 4px; }
+  .gauge-val small, .gauge-ab-zahl small, .gauge-t small, .gauge-sl small { font-size: 10px; margin-left: 1px; }
   .gauge-name { font-size: 16px; }
   .gauge-name span { display: block; margin-left: 0; }
   .area, .panel-head, .gauge, .gauge-head { padding-inline: 16px; }
@@ -603,7 +649,7 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     <p class="verdict-zeit" id="verdict-zeit">Lade&hellip;</p>
     <div class="verdict-zeile">
       <div class="verdict-feld verdict-feld-name">
-        <span class="verdict-label">Engster Pegel</span>
+        <span class="verdict-label" id="verdict-fluss-label">Engster Pegel</span>
         <b class="verdict-name" id="verdict-name">&ndash;</b>
       </div>
       <div class="verdict-feld">
@@ -618,6 +664,10 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         <span class="verdict-label">Ladung</span>
         <b class="verdict-zahl v-ladung" id="verdict-t">&ndash;</b>
       </div>
+      <div class="verdict-feld" id="verdict-sl-feld">
+        <span class="verdict-label">Ladung SL</span>
+        <b class="verdict-zahl v-sl" id="verdict-sl">&ndash;</b>
+      </div>
     </div>
   </section>
 
@@ -625,14 +675,19 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     <div class="panel-head">
       <h3 id="h-pegel">Pegel</h3>
       <span class="badge live" id="pegel-badge">Live</span>
+      <div class="umschalter fluss" role="group" aria-label="Welcher Fluss">
+        <button type="button" id="btn-rhein" aria-pressed="true">Rhein</button>
+        <button type="button" id="btn-neckar" aria-pressed="false">Neckar</button>
+      </div>
       <div class="umschalter" role="group" aria-label="Welche Pegelwerte anzeigen">
         <button type="button" id="btn-5uhr" aria-pressed="false">5-Uhr-Wert</button>
         <button type="button" id="btn-aktuell" aria-pressed="true">Aktuell</button>
       </div>
       <p class="note" id="pegel-note"></p>
+      <p class="note legende" id="pegel-legende"></p>
     </div>
     <div class="gauge-head" aria-hidden="true">
-      <span>Pegelstelle</span><span class="kopf-pegel">Pegel</span><span><b class="kopf-ablade">Abladetiefe</b> / <b class="kopf-ladung">Ladung</b></span>
+      <span>Pegelstelle</span><span class="kopf-pegel">Pegel</span><span><b class="kopf-ablade">Abladetiefe</b> / <b class="kopf-ladung">Ladung</b><span id="kopf-sl"> / <b class="kopf-sl">SL</b></span></span>
     </div>
     <div id="gauges"></div>
   </section>
@@ -746,6 +801,34 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     return null;
   }
 
+  /* Schubleichter (SL) Somnia, Eichschein MAD 1904.
+     Stützstellen je 10 cm Eintauchung, Verdrängung ab Leerebene in m³
+     (= Tonnen Süßwasser). Dazwischen wächst sie laut Eichschein linear,
+     die Zwischenwerte treffen die Tabelle deshalb exakt.
+     Leerebene 63,6 cm, größte Eintauchung 324 cm = 1701,657 t. */
+  var SL_LEEREBENE_CM = 63.6;
+  var SL_GROESSTE_EINTAUCHUNG_CM = 324;
+  var SL_EICHSKALA = [
+    [63.6, 0], [64, 2.555], [70, 40.883], [80, 105.323], [90, 169.933], [100, 234.673],
+    [110, 299.533], [120, 364.503], [130, 429.573], [140, 494.713], [150, 559.903],
+    [160, 625.143], [170, 690.423], [180, 755.753], [190, 821.123], [200, 886.543],
+    [210, 952.003], [220, 1017.523], [230, 1083.083], [240, 1148.683], [250, 1214.323],
+    [260, 1280.003], [270, 1345.723], [280, 1411.493], [290, 1477.313], [300, 1543.193],
+    [310, 1609.133], [320, 1675.193], [324, 1701.657]
+  ];
+
+  function tonnenSL(cm) {
+    if (cm == null || cm <= SL_LEEREBENE_CM) return 0;
+    if (cm >= SL_GROESSTE_EINTAUCHUNG_CM) return SL_EICHSKALA[SL_EICHSKALA.length - 1][1];
+    for (var i = 1; i < SL_EICHSKALA.length; i++) {
+      if (cm <= SL_EICHSKALA[i][0]) {
+        var a = SL_EICHSKALA[i - 1], b = SL_EICHSKALA[i];
+        return a[1] + (b[1] - a[1]) * (cm - a[0]) / (b[0] - a[0]);
+      }
+    }
+    return null;
+  }
+
   function fmtT(t) {
     return Math.round(t).toLocaleString("de-DE");
   }
@@ -755,6 +838,46 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     if (typeof off !== "number") return "";
     return (off < 0 ? "− " : "+ ") + Math.abs(off) + " cm";
   }
+
+  /* ---------- Neckar ----------
+     Fixpunkt: 5 cm über dem niedrigsten Wasserstand (NW) sind 2,60 m
+     Abladetiefe möglich, also Zuschlag = 260 − (NW + 5). Von dort wird
+     zentimetergenau mit dem Pegel gerechnet, höchstens bis 2,80 m – tiefer
+     wird auf dem Neckar nicht geladen.
+     Gundelsheim NW 208 → + 47, Rockenau SKA NW 203 → + 52, Heidelberg NW 199 → + 56.
+     Für Rockenau Schleuse UP ist kein NW hinterlegt. Der Pegel zeigt bei
+     niedrigem Wasser rund 3 cm mehr als Rockenau SKA (30-Tage-Vergleich,
+     November 2026), daher NW geschätzt 206 → + 49.
+     kenn: amtliche Kennwerte laut PEGELONLINE (NW und MW 2010–2020,
+     HSW = höchster schiffbarer Wasserstand), soweit dort hinterlegt. */
+  var NECKAR_MAX_CM = 280;
+  var NECKAR_PEGEL = [
+    { id: "GUNDELSHEIM_UP", station: "fc1072e4-61d4-4e89-bc70-c7e8860fd208",
+      name: "Gundelsheim UP", river: "Neckar", offsetCm: 47,
+      kenn: { nw: 208, mw: 234, hsw: 380 } },
+    { id: "ROCKENAU_SCHLEUSE_UP", station: "5ab4f00f-24bd-4695-96b0-d013dc723c9c",
+      name: "Rockenau Schleuse UP", river: "Neckar", offsetCm: 49,
+      kenn: { hsw: 395 } },
+    { id: "ROCKENAU_SKA", station: "4c00a166-7d6d-48d7-b4dc-673b96b4041e",
+      name: "Rockenau SKA", river: "Neckar", offsetCm: 52,
+      kenn: { nw: 203, mw: 237 } },
+    { id: "HEIDELBERG_UP", station: "827b2685-47ec-44df-a90f-980f5e0c1591",
+      name: "Heidelberg UP", river: "Neckar", offsetCm: 56,
+      kenn: { nw: 199, mw: 220, hsw: 260 } }
+  ];
+
+  /* Welcher Fluss gerade angezeigt wird, und je Fluss der 5-Uhr-Stand
+     und der zuletzt geholte Momentanstand. */
+  var FLUSS = "RHEIN";
+  var STAENDE = {
+    RHEIN: null,
+    NECKAR: { updatedAt: null, placeholder: false, items: NECKAR_PEGEL.map(function (p) {
+      return Object.assign({ value: null, ts: null, state: null, trend: "unknown",
+                             trendNote: "", placeholder: false }, p);
+    }) }
+  };
+  var AKTUELL = { RHEIN: null, NECKAR: null };
+  function groessteCm() { return FLUSS === "NECKAR" ? NECKAR_MAX_CM : GROESSTE_EINTAUCHUNG_CM; }
 
   var STATE_LABEL = { low: "niedrig", normal: "mittel", high: "hoch" };
   var TREND_LABEL = { falling: "fallend", rising: "steigend", steady: "gleichbleibend", unknown: "Trend offen" };
@@ -805,6 +928,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     var items = (data && data.items) || [];
     var anySample = false;
     var engsterId = engsterPegel(items);
+    var maxCm = groessteCm();
+    var neckar = FLUSS === "NECKAR";
 
     items.forEach(function (g) {
       if (g.placeholder) anySample = true;
@@ -825,14 +950,14 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       if (abCm == null) {
         zahl.textContent = "—";
       } else {
-        zahl.appendChild(document.createTextNode(fmtM(Math.min(abCm, GROESSTE_EINTAUCHUNG_CM))));
+        zahl.appendChild(document.createTextNode(fmtM(Math.min(abCm, maxCm))));
         zahl.appendChild(el("small", null, "m"));
       }
       zahl.title = "Pegel " + g.value + " cm " + offsetLabel(g);
       row.appendChild(zahl);
       var unter = el("div", "gauge-unter");
 
-      var t = abCm == null ? null : tonnen(abCm);
+      var t = abCm == null ? null : tonnen(Math.min(abCm, maxCm));
       var tCell = el("div", "gauge-t");
       if (t == null) {
         tCell.textContent = "—";
@@ -842,16 +967,35 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       }
       unter.appendChild(tCell);
 
-      if (abCm != null && abCm >= GROESSTE_EINTAUCHUNG_CM) {
-        unter.appendChild(el("div", "gauge-voll", "voll abgeladen"));
+      if (!neckar) {
+        var slCell = el("div", "gauge-sl");
+        slCell.appendChild(el("small", "sl-marke", "SL"));
+        if (abCm == null) {
+          slCell.appendChild(document.createTextNode("—"));
+        } else {
+          slCell.appendChild(document.createTextNode(fmtT(tonnenSL(abCm))));
+          slCell.appendChild(el("small", null, "t"));
+        }
+        slCell.title = "Schubleichter Somnia bei gleicher Abladetiefe, höchstens " +
+          fmtM(SL_GROESSTE_EINTAUCHUNG_CM) + " m";
+        unter.appendChild(slCell);
+      }
+
+      if (abCm != null && abCm >= maxCm) {
+        unter.appendChild(el("div", "gauge-voll", neckar ? "Neckar-Maximum" : "voll abgeladen"));
+      }
+      if (!neckar && abCm != null && abCm >= SL_GROESSTE_EINTAUCHUNG_CM) {
+        unter.appendChild(el("div", "gauge-voll sl", "SL voll abgeladen"));
       }
       row.appendChild(unter);
 
       var meta = el("div", "gauge-meta");
       if (g.id === engsterId) meta.appendChild(el("span", "chip engster-chip", "engster Wert"));
 
-      var stateChip = el("span", "chip", STATE_LABEL[g.state] || "Zustand offen");
-      meta.appendChild(stateChip);
+      /* Am Neckar gibt es nicht für jeden Pegel eine Einstufung – dann ohne Hinweis. */
+      if (STATE_LABEL[g.state] || !neckar) {
+        meta.appendChild(el("span", "chip", STATE_LABEL[g.state] || "Zustand offen"));
+      }
 
       var trendChip = el("span", "chip " + (g.trend === "falling" ? "falling" : g.trend === "rising" ? "rising" : ""),
         TREND_LABEL[g.trend] || TREND_LABEL.unknown);
@@ -866,6 +1010,13 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         var note = el("span", "ts", "· " + g.trendNote);
         meta.appendChild(note);
       }
+      if (g.kenn) {
+        var kw = el("div", "kennwerte");
+        if (g.kenn.nw != null) kw.appendChild(el("span", "kw-nw", "NW " + g.kenn.nw + " cm"));
+        if (g.kenn.mw != null) kw.appendChild(el("span", "kw-mw", "MW " + g.kenn.mw + " cm"));
+        if (g.kenn.hsw != null) kw.appendChild(el("span", "kw-hsw", "HSW " + g.kenn.hsw + " cm"));
+        meta.appendChild(kw);
+      }
 
       row.appendChild(meta);
       host.appendChild(row);
@@ -878,7 +1029,18 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 
     document.getElementById("pegel-note").textContent =
       "Abladetiefe = Pegel " +
-      items.map(function (g) { return g.name + " " + offsetLabel(g); }).join(" · ");
+      items.map(function (g) { return g.name + " " + offsetLabel(g); }).join(" · ") +
+      (neckar ? " · 2,60\u00a0m bei NW\u00a0+\u00a05\u00a0cm · höchstens " + fmtM(NECKAR_MAX_CM) + "\u00a0m" : "");
+
+    var leg = document.getElementById("pegel-legende");
+    leg.textContent = "";
+    if (neckar) {
+      leg.appendChild(el("span", "kw-nw", "NW niedrigster"));
+      leg.appendChild(el("span", "kw-mw", "MW mittlerer"));
+      leg.appendChild(el("span", "kw-hsw", "HSW höchster schiffbarer Wasserstand"));
+    }
+
+    document.getElementById("kopf-sl").style.display = neckar ? "none" : "";
 
     renderVerdict(items, istLive);
   }
@@ -897,23 +1059,33 @@ footer strong { color: var(--ink-2); font-weight: 600; }
     var g = null;
     items.forEach(function (x) { if (x.id === engId) g = x; });
 
+    var maxCm = groessteCm();
+    var neckar = FLUSS === "NECKAR";
+    document.getElementById("verdict-fluss-label").textContent =
+      "Engster Pegel " + (neckar ? "Neckar" : "Rhein");
+
+    document.getElementById("verdict-sl-feld").style.display = neckar ? "none" : "";
+
     zeit.textContent = "";
     zeit.appendChild(el("b", null, istLive ? "Aktuell" : "5-Uhr-Wert"));
     zeit.appendChild(document.createTextNode(g && g.ts ? " · " + fmtDateTime(g.ts) : ""));
 
     if (!g) {
-      ["verdict-name", "verdict-pegel", "verdict-tief", "verdict-t"].forEach(function (id) {
+      ["verdict-name", "verdict-pegel", "verdict-tief", "verdict-t", "verdict-sl"].forEach(function (id) {
         wertSetzen(id, "–");
       });
+      document.getElementById("verdict-tief-label").textContent = "Tiefgang";
       return;
     }
     var cm = abladungCm(g);
-    var voll = cm >= GROESSTE_EINTAUCHUNG_CM;
+    var voll = cm >= maxCm;
     wertSetzen("verdict-name", g.name);
     wertSetzen("verdict-pegel", String(g.value), "cm");
-    wertSetzen("verdict-tief", fmtM(Math.min(cm, GROESSTE_EINTAUCHUNG_CM)), "m");
-    wertSetzen("verdict-t", fmtT(tonnen(cm)), "t");
-    document.getElementById("verdict-tief-label").textContent = voll ? "Tiefgang · voll" : "Tiefgang";
+    wertSetzen("verdict-tief", fmtM(Math.min(cm, maxCm)), "m");
+    wertSetzen("verdict-t", fmtT(tonnen(Math.min(cm, maxCm))), "t");
+    wertSetzen("verdict-sl", fmtT(tonnenSL(cm)), "t");
+    document.getElementById("verdict-tief-label").textContent =
+      voll ? (neckar ? "Tiefgang · Neckar-Max." : "Tiefgang · voll") : "Tiefgang";
   }
 
   /* ---------- rain ---------- */
@@ -1008,66 +1180,97 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   /* ---------- Momentanwerte auf Knopfdruck ---------- */
 
   var PEGELONLINE = "https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/";
-  var TAGESSTAND = null;   // zuletzt geladener 5-Uhr-Stand
   var LIVE = false;
 
   function knoepfeSetzen() {
     document.getElementById("btn-5uhr").setAttribute("aria-pressed", LIVE ? "false" : "true");
     document.getElementById("btn-aktuell").setAttribute("aria-pressed", LIVE ? "true" : "false");
+    document.getElementById("btn-rhein").setAttribute("aria-pressed", FLUSS === "RHEIN" ? "true" : "false");
+    document.getElementById("btn-neckar").setAttribute("aria-pressed", FLUSS === "NECKAR" ? "true" : "false");
   }
 
   function fuenfUhrZeigen() {
     LIVE = false;
-    renderGauges(TAGESSTAND, false);
+    renderGauges(STAENDE[FLUSS], false);
     knoepfeSetzen();
   }
 
-  /* Holt bei jedem Druck frisch – auch wenn schon Momentanwerte angezeigt werden. */
-  var ABRUF_LAEUFT = false;
+  /* Holt bei jedem Druck frisch – auch wenn schon Momentanwerte angezeigt werden.
+     Wechselt man während des Abrufs den Fluss, zählt nur der jüngste Abruf. */
+  var ABRUF_NR = 0;
   async function aktuellAbrufen() {
     var btn = document.getElementById("btn-aktuell");
-    if (!TAGESSTAND || !TAGESSTAND.items || ABRUF_LAEUFT) return;
+    var fluss = FLUSS;
+    var stand = STAENDE[fluss];
+    if (!stand || !stand.items) return;
 
-    ABRUF_LAEUFT = true;
+    var nr = ++ABRUF_NR;
     btn.disabled = true;
     btn.textContent = "Wird geholt …";
 
     try {
-      var items = await Promise.all(TAGESSTAND.items.map(async function (g) {
-        var r = await fetch(PEGELONLINE + encodeURIComponent(g.id) + "/W/currentmeasurement.json",
-                            { cache: "no-store" });
+      var items = await Promise.all(stand.items.map(async function (g) {
+        var r = await fetch(PEGELONLINE + encodeURIComponent(g.station || g.id) +
+                            "/W/currentmeasurement.json", { cache: "no-store" });
         if (!r.ok) throw new Error(g.name + ": HTTP " + r.status);
         var m = await r.json();
         var wert = Math.round(m.value);
         var diff = (typeof g.value === "number") ? wert - g.value : null;
-        return {
-          id: g.id, name: g.name, river: g.river,
+        var zustand = STATE_LABEL[m.stateMnwMhw] ? m.stateMnwMhw : g.state;
+        if (!g.state && zustand) g.state = zustand;   // auch für die 5-Uhr-Ansicht merken
+        return Object.assign({}, g, {
           value: wert,
           ts: m.timestamp,
-          state: m.stateMnwMhw || g.state,
+          state: zustand,
           trend: diff == null ? "unknown" : diff > 0 ? "rising" : diff < 0 ? "falling" : "steady",
           trendNote: diff == null ? "Momentanwert"
             : "Momentanwert, " + (diff > 0 ? "+" : "") + diff + " cm gegenüber 5 Uhr",
           placeholder: false
-        };
+        });
       }));
 
-      LIVE = true;
-      renderGauges({ updatedAt: new Date().toISOString(), placeholder: false, items: items }, true);
+      AKTUELL[fluss] = { updatedAt: new Date().toISOString(), placeholder: false, items: items };
+      if (nr === ABRUF_NR && fluss === FLUSS) {
+        LIVE = true;
+        renderGauges(AKTUELL[fluss], true);
+      }
     } catch (e) {
       console.error("Momentanabruf fehlgeschlagen:", e);
-      document.getElementById("pegel-note").textContent =
-        "Abruf fehlgeschlagen – PEGELONLINE antwortet gerade nicht. Angezeigt bleibt der 5-Uhr-Stand.";
+      if (nr === ABRUF_NR && fluss === FLUSS) {
+        LIVE = false;
+        renderGauges(STAENDE[fluss], false);
+        document.getElementById("pegel-note").textContent =
+          "Abruf fehlgeschlagen – PEGELONLINE antwortet gerade nicht. Angezeigt bleibt der 5-Uhr-Stand.";
+      }
     } finally {
-      ABRUF_LAEUFT = false;
-      btn.disabled = false;
-      btn.textContent = "Aktuell";
-      knoepfeSetzen();
+      if (nr === ABRUF_NR) {
+        btn.disabled = false;
+        btn.textContent = "Aktuell";
+        knoepfeSetzen();
+      }
     }
+  }
+
+  /* Rhein oder Neckar. Die Ansicht (Aktuell oder 5 Uhr) bleibt beim Wechsel
+     erhalten; die Werte des gewählten Flusses werden frisch geholt. */
+  async function flussWaehlen(f) {
+    if (f === FLUSS) return;
+    FLUSS = f;
+    try {
+      history.replaceState(null, "", f === "NECKAR" ? "#neckar" : location.pathname + location.search);
+    } catch (e) { /* Adresse bleibt, wie sie ist */ }
+    var warLive = LIVE;
+    if (warLive && AKTUELL[f]) renderGauges(AKTUELL[f], true);
+    else renderGauges(STAENDE[f], false);
+    knoepfeSetzen();
+    await fuenfUhrHolen();
+    if (warLive && f === FLUSS) await aktuellAbrufen();
   }
 
   document.getElementById("btn-5uhr").addEventListener("click", fuenfUhrZeigen);
   document.getElementById("btn-aktuell").addEventListener("click", aktuellAbrufen);
+  document.getElementById("btn-rhein").addEventListener("click", function () { flussWaehlen("RHEIN"); });
+  document.getElementById("btn-neckar").addEventListener("click", function () { flussWaehlen("NECKAR"); });
 
   /* ---------- diesel ---------- */
 
@@ -1201,8 +1404,11 @@ footer strong { color: var(--ink-2); font-weight: 600; }
 
   /* ---------- boot ---------- */
 
-  TAGESSTAND = SNAPSHOT.gauges;
-  renderGauges(TAGESSTAND, false);
+  STAENDE.RHEIN = SNAPSHOT.gauges;
+  /* Mit …/#neckar in der Adresse startet die Seite gleich auf dem Neckar. */
+  if ((location.hash || "").toLowerCase() === "#neckar") FLUSS = "NECKAR";
+  renderGauges(STAENDE[FLUSS], false);
+  knoepfeSetzen();
   renderRain(SNAPSHOT.rain);
   renderDiesel(SNAPSHOT.diesel);
   renderFooter(SNAPSHOT.gauges.updatedAt, false);
@@ -1213,8 +1419,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
       if (!res.ok) return;
       var d = await res.json();
       if (d.gauges) {
-        TAGESSTAND = d.gauges;
-        if (!LIVE) renderGauges(TAGESSTAND, false);
+        STAENDE.RHEIN = d.gauges;
+        if (!LIVE && FLUSS === "RHEIN") renderGauges(STAENDE.RHEIN, false);
         renderFooter(d.gauges.updatedAt, true);
       }
       if (d.rain) renderRain(d.rain);
@@ -1235,12 +1441,14 @@ footer strong { color: var(--ink-2); font-weight: 600; }
   function cmRunden(v) { return Math.floor(Number(v) + 0.5); }
 
   async function fuenfUhrHolen() {
-    if (!TAGESSTAND || !TAGESSTAND.items || !TAGESSTAND.items.length) return;
+    var fluss = FLUSS;
+    var stand = STAENDE[fluss];
+    if (!stand || !stand.items || !stand.items.length) return;
     var heute = datumBerlin(new Date());
     var gestern = datumBerlin(new Date(Date.now() - 86400000));
     try {
-      var items = await Promise.all(TAGESSTAND.items.map(async function (g) {
-        var r = await fetch(PEGELONLINE + encodeURIComponent(g.id) +
+      var items = await Promise.all(stand.items.map(async function (g) {
+        var r = await fetch(PEGELONLINE + encodeURIComponent(g.station || g.id) +
           "/W/measurements.json?start=P2D", { cache: "no-store" });
         if (!r.ok) throw new Error(g.name + ": HTTP " + r.status);
         var reihe = await r.json();
@@ -1251,11 +1459,10 @@ footer strong { color: var(--ink-2); font-weight: 600; }
           if (t.slice(11, 16) === "05:00") treffer[t.slice(0, 10)] = m;
         });
         var h = treffer[heute], v = treffer[gestern];
-        var neu = {
-          id: g.id, name: g.name, river: g.river,
+        var neu = Object.assign({}, g, {
           value: null, ts: null, state: g.state,
           trend: "unknown", trendNote: "", placeholder: false
-        };
+        });
         var basis = h || v;
         if (!basis) return g;   // nichts gefunden: alten Eintrag behalten
         neu.value = cmRunden(basis.value);
@@ -1269,8 +1476,8 @@ footer strong { color: var(--ink-2); font-weight: 600; }
         }
         return neu;
       }));
-      TAGESSTAND = { updatedAt: new Date().toISOString(), placeholder: false, items: items };
-      if (!LIVE) renderGauges(TAGESSTAND, false);
+      STAENDE[fluss] = { updatedAt: new Date().toISOString(), placeholder: false, items: items };
+      if (!LIVE && fluss === FLUSS) renderGauges(STAENDE[fluss], false);
     } catch (e) {
       console.error("5-Uhr-Abruf fehlgeschlagen:", e);
       /* Dann bleibt der Stand aus daten.json stehen. */
